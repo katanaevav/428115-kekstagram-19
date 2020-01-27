@@ -1,44 +1,55 @@
 'use strict';
 
-var userPhotos = [];
+var TEXT_COMMENTS = [
+  'Всё отлично!',
+  'В целом всё неплохо. Но не всё.',
+  'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
+  'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
+  'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
+  'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
+];
+var TEXT_COMMENTS_COUNT = 5;
+var USER_NAMES = ['Иван', 'Артём', 'Мурзик', 'Жужа', 'Евгений', 'Петр', 'Маша'];
+var USER_NAMES_COUNT = 6;
+var AVARARS_COUNT = 5;
+var AVARARS_START_NUMBER = 1;
+var MIN_COMMENTS_COUNT = 1;
+var MAX_COMMENTS_COUNT = 10;
+var MIN_LIKES_COUNT = 1;
+var MAX_LIKES_COUNT = 200;
+var PHOTOS_COUNT = 25;
 
-var getRandom = function (fromValue, toValue) {
-  return Math.floor(fromValue + Math.random() * (toValue + 1 - fromValue));
+var getRandom = function (maxValue) {
+  return Math.floor(Math.random() * Math.floor(maxValue));
 };
 
-var generateUserPhotos = function () {
-  var TEXT_COMMENTS = [
-    'Всё отлично!',
-    'В целом всё неплохо. Но не всё.',
-    'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
-    'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
-    'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
-    'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
-  ];
-  var USER_NAMES = ['Иван', 'Артём', 'Мурзик', 'Жужа', 'Евгений', 'Петр', 'Маша'];
+var generateComments = function (commentsCount) {
+  var commentsArray = [];
 
-  for (var i = 0; i < 25; i++) {
-
-    var commentsArray = [];
-
-    for (var j = 0; j < getRandom(1, 30); j++) {
-      commentsArray[j] = {
-        avatar: 'img/avatar-' + getRandom(1, 6) + '.svg',
-        message: TEXT_COMMENTS[getRandom(0, 5)],
-        name: USER_NAMES[getRandom(0, 6)]
-      };
-    }
-
-    userPhotos[i] = {
-      url: 'photos/' + (i + 1) + '.jpg',
-      description: 'Описание к фотографии № ' + i,
-      likes: getRandom(15, 200),
-      comments: commentsArray
+  for (var i = 0; i < commentsCount; i++) {
+    commentsArray[i] = {
+      avatar: 'img/avatar-' + (getRandom(AVARARS_COUNT) + AVARARS_START_NUMBER) + '.svg',
+      message: TEXT_COMMENTS[getRandom(TEXT_COMMENTS_COUNT)],
+      name: USER_NAMES[getRandom(USER_NAMES_COUNT)]
     };
   }
+  return commentsArray;
 };
 
-generateUserPhotos();
+var generateUserPhotos = function (photosCount) {
+  var photoArray = [];
+  for (var i = 0; i < photosCount; i++) {
+    photoArray[i] = {
+      url: 'photos/' + (i + 1) + '.jpg',
+      description: 'Описание к фотографии № ' + i,
+      likes: getRandom(MAX_LIKES_COUNT) - MIN_LIKES_COUNT,
+      comments: generateComments(getRandom(MAX_COMMENTS_COUNT) + MIN_COMMENTS_COUNT)
+    };
+  }
+  return photoArray;
+};
+
+var userPhotos = generateUserPhotos(PHOTOS_COUNT);
 
 var pictureListElement = document.querySelector('.pictures');
 
@@ -56,10 +67,13 @@ var renderPicture = function (picture) {
   return pictureElement;
 };
 
-var fragment = document.createDocumentFragment();
+var putPhotos = function (photosList) {
+  var fragment = document.createDocumentFragment();
 
-for (var i = 0; i < userPhotos.length; i++) {
-  fragment.appendChild(renderPicture(userPhotos[i]));
-}
+  for (var i = 0; i < photosList.length; i++) {
+    fragment.appendChild(renderPicture(userPhotos[i]));
+  }
+  pictureListElement.appendChild(fragment);
+};
 
-pictureListElement.appendChild(fragment);
+putPhotos(userPhotos);
