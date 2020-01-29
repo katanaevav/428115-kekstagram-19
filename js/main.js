@@ -79,23 +79,32 @@ renderPhotos(userPhotos);
 
 var bigPicture = document.querySelector('.big-picture');
 
-if (bigPicture.classList.contains('hidden')) {
-  bigPicture.classList.remove('hidden');
-}
+var showBigPicture = function () {
+  if (bigPicture.classList.contains('hidden')) {
+    bigPicture.classList.remove('hidden');
+  }
+};
+
+showBigPicture();
+
+var generateCommentsStructure = function (commentsArray) {
+  var htmlStructure = '';
+  for (var i = 0; i < commentsArray.length; i++) {
+    htmlStructure += '<li class="social__comment">' +
+      '<img ' +
+      'class="social__picture" ' +
+      'src="' + commentsArray[i].avatar + '" ' +
+      'alt="' + commentsArray[i].name + '" ' +
+      'width="35" height="35"> ' +
+      '<p class="social__text">' + commentsArray[i].message + '</p> ' +
+      '</li>';
+  }
+  return htmlStructure;
+};
 
 var renderComments = function (photoId) {
   var commentsList = bigPicture.querySelector('.social__comments');
-  for (var i = 0; i < userPhotos[photoId].comments.length; i++) {
-    var commentHTMLElement = '<li class="social__comment">' +
-      '<img ' +
-      'class="social__picture" ' +
-      'src="' + userPhotos[photoId].comments[i].avatar + '" ' +
-      'alt="' + userPhotos[photoId].comments[i].name + '" ' +
-      'width="35" height="35"> ' +
-      '<p class="social__text">' + userPhotos[photoId].comments[i].message + '</p> ' +
-      '</li>';
-    commentsList.insertAdjacentHTML('afterend', commentHTMLElement);
-  }
+  commentsList.insertAdjacentHTML('afterend', generateCommentsStructure(userPhotos[photoId].comments));
 };
 
 var renderBigPicture = function (photoId) {
