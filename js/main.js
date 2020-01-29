@@ -9,6 +9,7 @@ var MAX_COMMENTS_COUNT = 10;
 var MIN_LIKES_COUNT = 1;
 var MAX_LIKES_COUNT = 200;
 var PHOTOS_COUNT = 25;
+var BIG_PICTURE_ID = 0;
 
 var textComments = [
   'Всё отлично!',
@@ -42,7 +43,7 @@ var getUserPhotos = function (count) {
   for (var i = 0; i < count; i++) {
     photoArray.push({
       url: 'photos/' + (i + 1) + '.jpg',
-      description: 'Описание к фотографии № ' + i,
+      description: 'Описание к фотографии № ' + (i + 1),
       likes: getRandomValue(MAX_LIKES_COUNT) - MIN_LIKES_COUNT,
       comments: getComments(getRandomValue(MAX_COMMENTS_COUNT) + MIN_COMMENTS_COUNT)
     });
@@ -75,3 +76,60 @@ var renderPhotos = function (photosList) {
 };
 
 renderPhotos(userPhotos);
+
+var bigPicture = document.querySelector('.big-picture');
+
+var showBigPicture = function () {
+  if (bigPicture.classList.contains('hidden')) {
+    bigPicture.classList.remove('hidden');
+  }
+};
+
+showBigPicture();
+
+var generateCommentsStructure = function (commentsArray) {
+  var htmlStructure = '';
+  for (var i = 0; i < commentsArray.length; i++) {
+    htmlStructure += '<li class="social__comment">' +
+      '<img ' +
+      'class="social__picture" ' +
+      'src="' + commentsArray[i].avatar + '" ' +
+      'alt="' + commentsArray[i].name + '" ' +
+      'width="35" height="35"> ' +
+      '<p class="social__text">' + commentsArray[i].message + '</p> ' +
+      '</li>';
+  }
+  return htmlStructure;
+};
+
+var renderComments = function (photoId) {
+  var commentsList = bigPicture.querySelector('.social__comments');
+  commentsList.insertAdjacentHTML('afterend', generateCommentsStructure(userPhotos[photoId].comments));
+};
+
+var renderBigPicture = function (photoId) {
+  var bigPictureImage = bigPicture.querySelector('.big-picture__img').querySelector('img');
+  bigPictureImage.setAttribute('src', userPhotos[photoId].url);
+
+  var bigPictureLikes = bigPicture.querySelector('.likes-count');
+  bigPictureLikes.textContent = userPhotos[photoId].likes;
+
+  var bigPictureComments = bigPicture.querySelector('.comments-count');
+  bigPictureComments.textContent = userPhotos[photoId].comments.length;
+
+  var bigPictureDescription = bigPicture.querySelector('.social__caption');
+  bigPictureDescription.textContent = userPhotos[photoId].description;
+
+  renderComments(photoId);
+};
+
+renderBigPicture(BIG_PICTURE_ID);
+
+var socialCommentsCount = document.querySelector('.social__comment-count');
+socialCommentsCount.classList.add('hidden');
+
+var commentsLoader = document.querySelector('.comments-loader');
+commentsLoader.classList.add('hidden');
+
+var pageBody = document.querySelector('body');
+pageBody.classList.add('modal-open');
