@@ -10,6 +10,7 @@ var MIN_LIKES_COUNT = 1;
 var MAX_LIKES_COUNT = 200;
 var PHOTOS_COUNT = 25;
 var BIG_PICTURE_ID = 0;
+var ESC_KEY = 'Escape';
 
 var textComments = [
   'Всё отлично!',
@@ -85,7 +86,7 @@ var showBigPicture = function () {
   }
 };
 
-showBigPicture();
+// showBigPicture();
 
 var generateCommentsStructure = function (commentsArray) {
   var htmlStructure = '';
@@ -131,8 +132,47 @@ socialCommentsCount.classList.add('hidden');
 var commentsLoader = document.querySelector('.comments-loader');
 commentsLoader.classList.add('hidden');
 
-var pageBody = document.querySelector('body');
-pageBody.classList.add('modal-open');
+// var pageBody = document.querySelector('body');
+// pageBody.classList.add('modal-open');
 
 // 1.2. Выбор изображения для загрузки осуществляется с помощью стандартного контрола загрузки файла #upload-file, который стилизован под букву «О» в логотипе. После выбора изображения (изменения значения поля #upload-file), показывается форма редактирования изображения. Элементу body задаётся класс modal-open.
 // 1.3 Закрытие формы редактирования изображения производится либо нажатием на кнопку #upload-cancel, либо нажатием клавиши Esc. У элемента body удаляется класс modal-open.
+
+var pageBody = document.querySelector('body');
+
+var ulpoadPhotoPhorm = document.querySelector('.img-upload');
+var uploadFileInput = ulpoadPhotoPhorm.querySelector('#upload-file');
+
+var imgUploadOverlay = ulpoadPhotoPhorm.querySelector('.img-upload__overlay');
+var closeUploadFormButton = ulpoadPhotoPhorm.querySelector('#upload-cancel');
+
+var openUploadForm = function () {
+  imgUploadOverlay.classList.remove('hidden');
+  pageBody.classList.add('modal-open');
+  document.addEventListener('keydown', oncloseUploadEscPress);
+};
+
+var closeUploadForm = function () {
+  imgUploadOverlay.classList.add('hidden');
+  pageBody.classList.remove('modal-open');
+  document.removeEventListener('keydown', oncloseUploadEscPress);
+  uploadFileInput.value = '';
+};
+
+var uploadPhoto = function () {
+  openUploadForm();
+};
+
+uploadFileInput.addEventListener('change', function () {
+  uploadPhoto();
+});
+
+closeUploadFormButton.addEventListener('click', function () {
+  closeUploadForm();
+});
+
+var oncloseUploadEscPress = function (evt) {
+  if (evt.key === ESC_KEY) {
+    closeUploadForm();
+  }
+};
