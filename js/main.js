@@ -176,3 +176,17 @@ var oncloseUploadEscPress = function (evt) {
     closeUploadForm();
   }
 };
+
+// .effect-level__pin mouseup
+
+var effectLevelPin = ulpoadPhotoPhorm.querySelector('.effect-level__pin');
+var effect = ulpoadPhotoPhorm.querySelector('.effects__preview');
+
+effect.addEventListener('click', function () {
+  console.log('click on effect item');
+});
+
+
+effectLevelPin.addEventListener('mouseup', function () {
+  console.log('mouseup on pin');
+});
