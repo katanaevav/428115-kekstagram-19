@@ -10,6 +10,21 @@ var MIN_LIKES_COUNT = 1;
 var MAX_LIKES_COUNT = 200;
 var PHOTOS_COUNT = 25;
 var BIG_PICTURE_ID = 0;
+var ESC_KEY = 'Escape';
+var PHOBOS_MAX = 3;
+var HEAT_MIN = 1;
+var HEAT_MAX = 3;
+var EFFECT_DEFAULT = 100;
+var EFFECT_MAX = 100;
+var SCALE_MIN = 25;
+var SCALE_MAX = 100;
+var SCALE_DEFAULT = 100;
+var SCALE_INC = 25;
+
+var HASHTAG_MIN_LENGTH = 2;
+var HASHTAG_MAX_LENGTH = 20;
+var HASHTAG_MAX_COUNT = 5;
+var COMMENT_LENGTH = 140;
 
 var textComments = [
   'Всё отлично!',
@@ -79,13 +94,13 @@ renderPhotos(userPhotos);
 
 var bigPicture = document.querySelector('.big-picture');
 
-var showBigPicture = function () {
-  if (bigPicture.classList.contains('hidden')) {
-    bigPicture.classList.remove('hidden');
-  }
-};
+// var showBigPicture = function () {
+//   if (bigPicture.classList.contains('hidden')) {
+//     bigPicture.classList.remove('hidden');
+//   }
+// };
 
-showBigPicture();
+// showBigPicture();
 
 var generateCommentsStructure = function (commentsArray) {
   var htmlStructure = '';
@@ -131,5 +146,266 @@ socialCommentsCount.classList.add('hidden');
 var commentsLoader = document.querySelector('.comments-loader');
 commentsLoader.classList.add('hidden');
 
+// var pageBody = document.querySelector('body');
+// pageBody.classList.add('modal-open');
+
+// 1.2. Выбор изображения для загрузки осуществляется с помощью стандартного контрола загрузки файла #upload-file, который стилизован под букву «О» в логотипе. После выбора изображения (изменения значения поля #upload-file), показывается форма редактирования изображения. Элементу body задаётся класс modal-open.
+// 1.3 Закрытие формы редактирования изображения производится либо нажатием на кнопку #upload-cancel, либо нажатием клавиши Esc. У элемента body удаляется класс modal-open.
+
 var pageBody = document.querySelector('body');
-pageBody.classList.add('modal-open');
+
+var uploadPhotoForm = document.querySelector('.img-upload');
+var uploadFileInput = uploadPhotoForm.querySelector('#upload-file');
+
+var imgUploadOverlay = uploadPhotoForm.querySelector('.img-upload__overlay');
+var closeUploadFormButton = uploadPhotoForm.querySelector('#upload-cancel');
+
+var hashtagsInput = uploadPhotoForm.querySelector('.text__hashtags');
+var commentInput = uploadPhotoForm.querySelector('.text__description');
+
+var openUploadForm = function () {
+  imgUploadOverlay.classList.remove('hidden');
+  pageBody.classList.add('modal-open');
+  document.addEventListener('keydown', oncloseUploadEscPress);
+};
+
+var closeUploadForm = function () {
+  imgUploadOverlay.classList.add('hidden');
+  pageBody.classList.remove('modal-open');
+  document.removeEventListener('keydown', oncloseUploadEscPress);
+  uploadFileInput.value = '';
+};
+
+
+uploadFileInput.addEventListener('change', function () {
+  openUploadForm();
+});
+
+closeUploadFormButton.addEventListener('click', function () {
+  closeUploadForm();
+});
+
+var oncloseUploadEscPress = function (evt) {
+  if ((document.activeElement !== hashtagsInput) && (document.activeElement !== commentInput)) {
+    if (evt.key === ESC_KEY) {
+      closeUploadForm();
+    }
+  }
+};
+
+// .effect-level__pin mouseup
+
+var effectLine = uploadPhotoForm.querySelector('.effect-level__line');
+var effectLevelInput = uploadPhotoForm.querySelector('.effect-level__value');
+var effectLevelPin = uploadPhotoForm.querySelector('.effect-level__pin');
+
+var getEffectLevel = function () {
+  var lineX = Math.round(effectLine.getBoundingClientRect().x);
+  var lineWidth = effectLine.getBoundingClientRect().width;
+  var pinX = Math.round(effectLevelPin.getBoundingClientRect().x);
+  var pinWidth = effectLevelPin.getBoundingClientRect().width;
+
+  return Math.round((100 * (pinX + (pinWidth / 2) - lineX) / (lineWidth)));
+};
+
+var getEffectValue = function (effectLevel, effectName) {
+  var effectValue = 1;
+
+  if (effectName === 'effect-chrome') {
+    effectValue = effectLevel / EFFECT_MAX;
+  } else if (effectName === 'effect-sepia') {
+    effectValue = effectLevel / EFFECT_MAX;
+  } else if (effectName === 'effect-marvin') {
+    effectValue = effectLevel;
+  } else if (effectName === 'effect-phobos') {
+    effectValue = effectLevel * PHOBOS_MAX / EFFECT_MAX;
+  } else if (effectName === 'effect-heat') {
+    effectValue = ((effectLevel < HEAT_MIN) ? 1 : effectLevel) * HEAT_MAX / EFFECT_MAX;
+  } else {
+    effectValue = effectLevel;
+  }
+
+  return effectValue;
+};
+
+effectLevelPin.addEventListener('mouseup', function () {
+  effectLevelInput.value = getEffectValue(getEffectLevel(), currentEffect);
+  setEffectClass(currentEffect);
+});
+
+var effectRadio = uploadPhotoForm.querySelectorAll('.effects__radio');
+var currentEffect;
+
+var previewPhoto = uploadPhotoForm.querySelector('.img-upload__preview');
+
+var setEffectClass = function (effectClassName) {
+  previewPhoto.className = '';
+  previewPhoto.classList.add('img-upload__preview');
+  previewPhoto.style.filter = '';
+
+  if (effectClassName === 'effect-chrome') {
+    previewPhoto.classList.add('.effects__preview--chrome');
+    previewPhoto.style.filter = 'grayscale(' + effectLevelInput.value + ')';
+  } else if (effectClassName === 'effect-sepia') {
+    previewPhoto.classList.add('.effects__preview--sepia');
+    previewPhoto.style.filter = 'sepia(' + effectLevelInput.value + ')';
+  } else if (effectClassName === 'effect-marvin') {
+    previewPhoto.classList.add('.effects__preview--marvin');
+    previewPhoto.style.filter = 'invert(' + effectLevelInput.value + '%)';
+  } else if (effectClassName === 'effect-phobos') {
+    previewPhoto.classList.add('.effects__preview--phobos');
+    previewPhoto.style.filter = 'blur(' + effectLevelInput.value + 'px)';
+  } else if (effectClassName === 'effect-heat') {
+    previewPhoto.classList.add('.effects__preview--heat');
+    previewPhoto.style.filter = 'brightness(' + effectLevelInput.value + ')';
+  }
+};
+
+setEffectClass(currentEffect);
+
+var onEffectRadioChange = function (radioEffect) {
+  radioEffect.addEventListener('change', function () {
+    currentEffect = radioEffect.id;
+    effectLevelInput.value = getEffectValue(EFFECT_DEFAULT, currentEffect);
+    setEffectClass(currentEffect);
+  });
+};
+
+var setEventsOnEffectRadio = function () {
+  for (var er = 0; er < effectRadio.length; er++) {
+    if (effectRadio[er].checked) {
+      currentEffect = effectRadio[er].id;
+    }
+    onEffectRadioChange(effectRadio[er]);
+  }
+};
+
+setEventsOnEffectRadio();
+
+// scale controls
+var scalePlusButton = uploadPhotoForm.querySelector('.scale__control--bigger');
+var scaleMinusButton = uploadPhotoForm.querySelector('.scale__control--smaller');
+var scaleValueInput = uploadPhotoForm.querySelector('.scale__control--value');
+
+var setScaleValue = function (scaleValue) {
+  scaleValueInput.value = scaleValue;
+  previewPhoto.style.transform = 'scale(' + scaleValueInput.value / SCALE_MAX + ')';
+};
+
+setScaleValue(SCALE_DEFAULT);
+
+var increaseImageSize = function () {
+  scaleValueInput.value = parseInt(scaleValueInput.value, 10) + SCALE_INC;
+  if (scaleValueInput.value > SCALE_MAX) {
+    scaleValueInput.value = SCALE_MAX;
+  }
+  setScaleValue(scaleValueInput.value);
+};
+
+scalePlusButton.addEventListener('click', function () {
+  increaseImageSize();
+});
+
+var decreaseImageSize = function () {
+  scaleValueInput.value = parseInt(scaleValueInput.value, 10) - SCALE_INC;
+  if (scaleValueInput.value < SCALE_MIN) {
+    scaleValueInput.value = SCALE_MIN;
+  }
+  setScaleValue(scaleValueInput.value);
+};
+
+scaleMinusButton.addEventListener('click', function () {
+  decreaseImageSize();
+});
+
+// Хэш-теги:
+// noHash - хэш-тег начинается с символа # (решётка);
+// invalidSymbols - строка после решётки должна состоять из букв и чисел и не может содержать пробелы, спецсимволы (#, @, $ и т.п.), символы пунктуации (тире, дефис, запятая и т.п.), эмодзи и т.д.;
+// minLength - хеш-тег не может состоять только из одной решётки;
+// maxLength - максимальная длина одного хэш-тега 20 символов, включая решётку;
+// хэш-теги нечувствительны к регистру: #ХэшТег и #хэштег считаются одним и тем же тегом;
+// хэш-теги разделяются пробелами;
+// noRepeat - один и тот же хэш-тег не может быть использован дважды;
+// maxCount - нельзя указать больше пяти хэш-тегов;
+// хэш-теги необязательны;
+
+var onHashtagsCheck = function (evt) {
+  var target = evt.target;
+
+  if (target.value === '') {
+    target.setCustomValidity('');
+    return;
+  }
+
+  var hashtags = target.value.split(' ');
+
+  var noHash = false;
+  var invalidSymbols = false;
+  var minLength = false;
+  var maxLength = false;
+  var noRepeat = false;
+  var maxCount = false;
+
+  var customValidityString = '';
+
+  if (hashtags.length > HASHTAG_MAX_COUNT) {
+    maxCount = true;
+  }
+  for (var i = 0; i < hashtags.length; i++) {
+    if (hashtags[i][0] !== '#') {
+      noHash = true;
+    }
+
+    if (hashtags[i].length < HASHTAG_MIN_LENGTH) {
+      minLength = true;
+    }
+
+    if (hashtags[i].length > HASHTAG_MAX_LENGTH) {
+      maxLength = true;
+    }
+
+    var regExpr = /(^)(#[a-zA-Zа-яА-Я\d]*$)/ig;
+    if (!regExpr.test(hashtags[i])) {
+      invalidSymbols = true;
+    }
+
+    for (var j = i + 1; j < hashtags.length; j++) {
+      if (hashtags[i].toLowerCase() === hashtags[j].toLowerCase()) {
+        noRepeat = true;
+      }
+    }
+  }
+
+  if (maxCount) {
+    customValidityString += 'Нельзя указывать более ' + HASHTAG_MAX_COUNT + ' хэштегов;   ';
+  }
+  if (noRepeat) {
+    customValidityString += 'Хэштеги не должны повторяться;   ';
+  }
+  if (maxLength) {
+    customValidityString += 'Максимальная длина хэштега не должна превышать ' + HASHTAG_MAX_LENGTH + ' символов;   ';
+  }
+  if (minLength) {
+    customValidityString += 'Минимальная длина хэштега составляет ' + HASHTAG_MIN_LENGTH + ' символа;   ';
+  }
+  if (noHash) {
+    customValidityString += 'Хэштег должен начинаться с символа "#";   ';
+  }
+  if (invalidSymbols) {
+    customValidityString += 'В хэштеге используются недопустимые символы;   ';
+  }
+
+  target.setCustomValidity(customValidityString);
+};
+
+var onCommentCheck = function (evt) {
+  var target = evt.target;
+  if (target.value.length > COMMENT_LENGTH) {
+    target.setCustomValidity('Длина комментария не должна превышать ' + COMMENT_LENGTH + ' символов');
+  } else {
+    target.setCustomValidity('');
+  }
+};
+
+hashtagsInput.addEventListener('input', onHashtagsCheck);
+commentInput.addEventListener('input', onCommentCheck);
