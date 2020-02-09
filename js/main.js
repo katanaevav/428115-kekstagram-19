@@ -154,14 +154,14 @@ commentsLoader.classList.add('hidden');
 
 var pageBody = document.querySelector('body');
 
-var ulpoadPhotoForm = document.querySelector('.img-upload');
-var uploadFileInput = ulpoadPhotoForm.querySelector('#upload-file');
+var uploadPhotoForm = document.querySelector('.img-upload');
+var uploadFileInput = uploadPhotoForm.querySelector('#upload-file');
 
-var imgUploadOverlay = ulpoadPhotoForm.querySelector('.img-upload__overlay');
-var closeUploadFormButton = ulpoadPhotoForm.querySelector('#upload-cancel');
+var imgUploadOverlay = uploadPhotoForm.querySelector('.img-upload__overlay');
+var closeUploadFormButton = uploadPhotoForm.querySelector('#upload-cancel');
 
-var hashtagsInput = ulpoadPhotoForm.querySelector('.text__hashtags');
-var commentInput = ulpoadPhotoForm.querySelector('.text__description');
+var hashtagsInput = uploadPhotoForm.querySelector('.text__hashtags');
+var commentInput = uploadPhotoForm.querySelector('.text__description');
 
 var openUploadForm = function () {
   imgUploadOverlay.classList.remove('hidden');
@@ -176,12 +176,9 @@ var closeUploadForm = function () {
   uploadFileInput.value = '';
 };
 
-var uploadPhoto = function () {
-  openUploadForm();
-};
 
 uploadFileInput.addEventListener('change', function () {
-  uploadPhoto();
+  openUploadForm();
 });
 
 closeUploadFormButton.addEventListener('click', function () {
@@ -198,9 +195,9 @@ var oncloseUploadEscPress = function (evt) {
 
 // .effect-level__pin mouseup
 
-var effectLine = ulpoadPhotoForm.querySelector('.effect-level__line');
-var effectLevelInput = ulpoadPhotoForm.querySelector('.effect-level__value');
-var effectLevelPin = ulpoadPhotoForm.querySelector('.effect-level__pin');
+var effectLine = uploadPhotoForm.querySelector('.effect-level__line');
+var effectLevelInput = uploadPhotoForm.querySelector('.effect-level__value');
+var effectLevelPin = uploadPhotoForm.querySelector('.effect-level__pin');
 
 var getEffectLevel = function () {
   var lineX = Math.round(effectLine.getBoundingClientRect().x);
@@ -236,10 +233,10 @@ effectLevelPin.addEventListener('mouseup', function () {
   setEffectClass(currentEffect);
 });
 
-var effectRadio = ulpoadPhotoForm.querySelectorAll('.effects__radio');
+var effectRadio = uploadPhotoForm.querySelectorAll('.effects__radio');
 var currentEffect;
 
-var previewPhoto = ulpoadPhotoForm.querySelector('.img-upload__preview');
+var previewPhoto = uploadPhotoForm.querySelector('.img-upload__preview');
 
 var setEffectClass = function (effectClassName) {
   previewPhoto.className = '';
@@ -274,17 +271,21 @@ var onEffectRadioChange = function (radioEffect) {
   });
 };
 
-for (var er = 0; er < effectRadio.length; er++) {
-  if (effectRadio[er].checked) {
-    currentEffect = effectRadio[er].id;
+var setEventsOnEffectRadio = function () {
+  for (var er = 0; er < effectRadio.length; er++) {
+    if (effectRadio[er].checked) {
+      currentEffect = effectRadio[er].id;
+    }
+    onEffectRadioChange(effectRadio[er]);
   }
-  onEffectRadioChange(effectRadio[er]);
-}
+};
+
+setEventsOnEffectRadio();
 
 // scale controls
-var scalePlusButton = ulpoadPhotoForm.querySelector('.scale__control--bigger');
-var scaleMinusButton = ulpoadPhotoForm.querySelector('.scale__control--smaller');
-var scaleValueInput = ulpoadPhotoForm.querySelector('.scale__control--value');
+var scalePlusButton = uploadPhotoForm.querySelector('.scale__control--bigger');
+var scaleMinusButton = uploadPhotoForm.querySelector('.scale__control--smaller');
+var scaleValueInput = uploadPhotoForm.querySelector('.scale__control--value');
 
 var setScaleValue = function (scaleValue) {
   scaleValueInput.value = scaleValue;
