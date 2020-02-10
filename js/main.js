@@ -9,8 +9,8 @@ var MAX_COMMENTS_COUNT = 10;
 var MIN_LIKES_COUNT = 1;
 var MAX_LIKES_COUNT = 200;
 var PHOTOS_COUNT = 25;
-var BIG_PICTURE_ID = 0;
 var ESC_KEY = 'Escape';
+var ENTER_KEY = 'Enter';
 var PHOBOS_MAX = 3;
 var HEAT_MIN = 1;
 var HEAT_MAX = 3;
@@ -36,6 +36,7 @@ var textComments = [
 ];
 var userNames = ['Иван', 'Артём', 'Мурзик', 'Жужа', 'Евгений', 'Петр', 'Маша'];
 
+var pageBody = document.querySelector('body');
 
 var getRandomValue = function (maxValue) {
   return Math.floor(Math.random() * Math.floor(maxValue));
@@ -58,6 +59,7 @@ var getUserPhotos = function (count) {
   for (var i = 0; i < count; i++) {
     photoArray.push({
       url: 'photos/' + (i + 1) + '.jpg',
+      id: i,
       description: 'Описание к фотографии № ' + (i + 1),
       likes: getRandomValue(MAX_LIKES_COUNT) - MIN_LIKES_COUNT,
       comments: getComments(getRandomValue(MAX_COMMENTS_COUNT) + MIN_COMMENTS_COUNT)
@@ -77,6 +79,7 @@ var pictureTemplate = document.querySelector('#picture')
 var createPictureElement = function (picture) {
   var pictureElement = pictureTemplate.cloneNode(true);
   pictureElement.querySelector('.picture__img').src = picture.url;
+  pictureElement.querySelector('.picture__img').id = picture.id;
   pictureElement.querySelector('.picture__likes').textContent = picture.likes;
   pictureElement.querySelector('.picture__comments').textContent = picture.comments.length;
   return pictureElement;
@@ -93,14 +96,33 @@ var renderPhotos = function (photosList) {
 renderPhotos(userPhotos);
 
 var bigPicture = document.querySelector('.big-picture');
+var closeBigPictureButton = document.querySelector('#picture-cancel');
 
-// var showBigPicture = function () {
-//   if (bigPicture.classList.contains('hidden')) {
-//     bigPicture.classList.remove('hidden');
-//   }
-// };
+var showBigPicture = function () {
+  if (bigPicture.classList.contains('hidden')) {
+    bigPicture.classList.remove('hidden');
+  }
+  pageBody.classList.add('modal-open');
+  document.addEventListener('keydown', oncloseBigPictureEscPress);
+};
 
-// showBigPicture();
+var closeBigPicture = function () {
+  bigPicture.classList.add('hidden');
+  if (pageBody.classList.contains('modal-open')) {
+    pageBody.classList.remove('modal-open');
+  }
+  document.removeEventListener('keydown', oncloseBigPictureEscPress);
+};
+
+closeBigPictureButton.addEventListener('click', function () {
+  closeBigPicture();
+});
+
+var oncloseBigPictureEscPress = function (evt) {
+  if (evt.key === ESC_KEY) {
+    closeBigPicture();
+  }
+};
 
 var generateCommentsStructure = function (commentsArray) {
   var htmlStructure = '';
@@ -119,7 +141,10 @@ var generateCommentsStructure = function (commentsArray) {
 
 var renderComments = function (photoId) {
   var commentsList = bigPicture.querySelector('.social__comments');
-  commentsList.insertAdjacentHTML('afterend', generateCommentsStructure(userPhotos[photoId].comments));
+  bigPicture.querySelectorAll('.social__comment').forEach(function (comment) {
+    comment.remove();
+  });
+  commentsList.insertAdjacentHTML('beforeend', generateCommentsStructure(userPhotos[photoId].comments));
 };
 
 var renderBigPicture = function (photoId) {
@@ -138,21 +163,34 @@ var renderBigPicture = function (photoId) {
   renderComments(photoId);
 };
 
-renderBigPicture(BIG_PICTURE_ID);
-
 var socialCommentsCount = document.querySelector('.social__comment-count');
 socialCommentsCount.classList.add('hidden');
 
 var commentsLoader = document.querySelector('.comments-loader');
 commentsLoader.classList.add('hidden');
 
-// var pageBody = document.querySelector('body');
-// pageBody.classList.add('modal-open');
+var onClickUserPicture = function (evt) {
+  if (evt.target && evt.target.matches('img')) {
+    renderBigPicture(evt.target.id);
+    showBigPicture();
+  }
+};
+
+var onEnterPressUserPicture = function (evt) {
+  var image = evt.target.querySelector('.picture__img');
+  if (image && image.matches('img')) {
+    if (evt.key === ENTER_KEY) {
+      renderBigPicture(image.id);
+      showBigPicture();
+    }
+  }
+};
+
+pictureListElement.addEventListener('click', onClickUserPicture);
+pictureListElement.addEventListener('keydown', onEnterPressUserPicture);
 
 // 1.2. Выбор изображения для загрузки осуществляется с помощью стандартного контрола загрузки файла #upload-file, который стилизован под букву «О» в логотипе. После выбора изображения (изменения значения поля #upload-file), показывается форма редактирования изображения. Элементу body задаётся класс modal-open.
 // 1.3 Закрытие формы редактирования изображения производится либо нажатием на кнопку #upload-cancel, либо нажатием клавиши Esc. У элемента body удаляется класс modal-open.
-
-var pageBody = document.querySelector('body');
 
 var uploadPhotoForm = document.querySelector('.img-upload');
 var uploadFileInput = uploadPhotoForm.querySelector('#upload-file');
@@ -164,14 +202,18 @@ var hashtagsInput = uploadPhotoForm.querySelector('.text__hashtags');
 var commentInput = uploadPhotoForm.querySelector('.text__description');
 
 var openUploadForm = function () {
-  imgUploadOverlay.classList.remove('hidden');
+  if (imgUploadOverlay.classList.contains('hidden')) {
+    imgUploadOverlay.classList.remove('hidden');
+  }
   pageBody.classList.add('modal-open');
   document.addEventListener('keydown', oncloseUploadEscPress);
 };
 
 var closeUploadForm = function () {
   imgUploadOverlay.classList.add('hidden');
-  pageBody.classList.remove('modal-open');
+  if (pageBody.classList.contains('modal-open')) {
+    pageBody.classList.remove('modal-open');
+  }
   document.removeEventListener('keydown', oncloseUploadEscPress);
   uploadFileInput.value = '';
 };
@@ -318,17 +360,6 @@ scaleMinusButton.addEventListener('click', function () {
   decreaseImageSize();
 });
 
-// Хэш-теги:
-// noHash - хэш-тег начинается с символа # (решётка);
-// invalidSymbols - строка после решётки должна состоять из букв и чисел и не может содержать пробелы, спецсимволы (#, @, $ и т.п.), символы пунктуации (тире, дефис, запятая и т.п.), эмодзи и т.д.;
-// minLength - хеш-тег не может состоять только из одной решётки;
-// maxLength - максимальная длина одного хэш-тега 20 символов, включая решётку;
-// хэш-теги нечувствительны к регистру: #ХэшТег и #хэштег считаются одним и тем же тегом;
-// хэш-теги разделяются пробелами;
-// noRepeat - один и тот же хэш-тег не может быть использован дважды;
-// maxCount - нельзя указать больше пяти хэш-тегов;
-// хэш-теги необязательны;
-
 var onHashtagsCheck = function (evt) {
   var target = evt.target;
 
@@ -364,7 +395,7 @@ var onHashtagsCheck = function (evt) {
       maxLength = true;
     }
 
-    var regExpr = /(^)(#[a-zA-Zа-яА-Я\d]*$)/ig;
+    var regExpr = /(^)([#a-zA-Zа-яА-Я\d]*$)/ig;
     if (!regExpr.test(hashtags[i])) {
       invalidSymbols = true;
     }
