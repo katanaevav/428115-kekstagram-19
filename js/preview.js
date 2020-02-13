@@ -12,14 +12,12 @@
     if (pageBody.classList.contains('modal-open')) {
       pageBody.classList.remove('modal-open');
     }
-    document.removeEventListener('keydown', oncloseBigPictureEscPress);
+    document.removeEventListener('keydown', onCloseBigPictureEscPress);
   };
 
-  closeBigPictureButton.addEventListener('click', function () {
-    closeBigPicture();
-  });
+  closeBigPictureButton.addEventListener('click', closeBigPicture);
 
-  var oncloseBigPictureEscPress = function (evt) {
+  var onCloseBigPictureEscPress = function (evt) {
     if (evt.key === window.utils.escKey) {
       closeBigPicture();
     }
@@ -70,7 +68,7 @@
       bigPicture.classList.remove('hidden');
     }
     pageBody.classList.add('modal-open');
-    document.addEventListener('keydown', oncloseBigPictureEscPress);
+    document.addEventListener('keydown', onCloseBigPictureEscPress);
   };
 
   var socialCommentsCount = document.querySelector('.social__comment-count');
