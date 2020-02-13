@@ -95,6 +95,7 @@
   var effectLine = uploadPhotoForm.querySelector('.effect-level__line');
   var effectLevelInput = uploadPhotoForm.querySelector('.effect-level__value');
   var effectLevelPin = uploadPhotoForm.querySelector('.effect-level__pin');
+  var effectLevelDepth = uploadPhotoForm.querySelector('.effect-level__depth');
 
   var getEffectLevel = function () {
     var lineX = Math.round(effectLine.getBoundingClientRect().x);
@@ -131,10 +132,61 @@
     return effectValue;
   };
 
-  effectLevelPin.addEventListener('mouseup', function () {
+  // ----------------------------------------------------------------------------------
+
+  var setDefaultEffectPinPosition = function () {
+    effectLevelPin.style.left = effectLine.getBoundingClientRect().width + 'px';
+    effectLevelDepth.style.width = effectLine.getBoundingClientRect().width + 'px';
     effectLevelInput.value = getEffectValue(getEffectLevel(), currentEffect);
-    setEffectClass(currentEffect);
+  };
+
+  effectLevelPin.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+
+    var dragged = false;
+
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+
+      dragged = true;
+      var minEffectPinPosition = effectLine.getBoundingClientRect().x;
+      var maxEffectPinPosition = effectLine.getBoundingClientRect().x + effectLine.getBoundingClientRect().width;
+      var posX = moveEvt.clientX - Math.round(effectLine.getBoundingClientRect().x);
+
+      if ((posX + effectLine.getBoundingClientRect().x) < minEffectPinPosition) {
+        posX = 0;
+      } else if ((posX + effectLine.getBoundingClientRect().x) > maxEffectPinPosition) {
+        posX = effectLine.getBoundingClientRect().width;
+      }
+
+      effectLevelPin.style.left = (posX) + 'px';
+      effectLevelDepth.style.width = (posX) + 'px';
+
+      effectLevelInput.value = getEffectValue(getEffectLevel(), currentEffect);
+      setEffectClass(currentEffect);
+    };
+
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+
+      if (dragged) {
+        var onClickPreventDefault = function (clickEvt) {
+          clickEvt.preventDefault();
+          effectLevelPin.removeEventListener('click', onClickPreventDefault);
+        };
+        effectLevelPin.addEventListener('click', onClickPreventDefault);
+      }
+
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
   });
+
+  // ----------------------------------------------------------------------------------
 
   var effectRadio = uploadPhotoForm.querySelectorAll('.effects__radio');
   var currentEffect;
@@ -164,7 +216,9 @@
     radioEffect.addEventListener('change', function () {
       currentEffect = radioEffect.id;
       effectLevelInput.value = getEffectValue(EFFECT_DEFAULT, currentEffect);
+
       setEffectClass(currentEffect);
+      setDefaultEffectPinPosition();
     });
   };
 
