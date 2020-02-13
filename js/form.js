@@ -1,9 +1,6 @@
 'use strict';
 
 (function () {
-  var PHOBOS_MAX = 3;
-  var HEAT_MIN = 1;
-  var HEAT_MAX = 3;
   var EFFECT_DEFAULT = 100;
   var EFFECT_MAX = 100;
   var SCALE_MIN = 25;
@@ -16,6 +13,44 @@
   var HASHTAG_MAX_LENGTH = 20;
   var HASHTAG_MAX_COUNT = 5;
   var COMMENT_LENGTH = 140;
+
+  var effects = {
+    'effect-chrome': {
+      name: 'chrome',
+      attribute: 'grayscale',
+      minValue: '0',
+      maxValue: '1',
+      unit: ''
+    },
+    'effect-sepia': {
+      name: 'sepia',
+      attribute: 'sepia',
+      minValue: '0',
+      maxValue: '1',
+      unit: ''
+    },
+    'effect-marvin': {
+      name: 'marvin',
+      attribute: 'invert',
+      minValue: '0',
+      maxValue: '100',
+      unit: '%'
+    },
+    'effect-phobos': {
+      name: 'phobos',
+      attribute: 'blur',
+      minValue: '0',
+      maxValue: '3',
+      unit: 'px'
+    },
+    'effect-heat': {
+      name: 'heat',
+      attribute: 'brightness',
+      minValue: '1',
+      maxValue: '3',
+      unit: ''
+    }
+  };
 
   var pageBody = document.querySelector('body');
   var uploadPhotoForm = document.querySelector('.img-upload');
@@ -46,24 +81,16 @@
     uploadFileInput.value = '';
   };
 
-
-  uploadFileInput.addEventListener('change', function () {
-    openUploadForm();
-  });
-
-  closeUploadFormButton.addEventListener('click', function () {
-    closeUploadForm();
-  });
+  uploadFileInput.addEventListener('change', openUploadForm);
+  closeUploadFormButton.addEventListener('click', closeUploadForm);
 
   var onCloseUploadEscPress = function (evt) {
     if ((document.activeElement !== hashtagsInput) && (document.activeElement !== commentInput)) {
-      if (evt.key === window.gallery.escKey) {
+      if (evt.key === window.utils.escKey) {
         closeUploadForm();
       }
     }
   };
-
-  // .effect-level__pin mouseup
 
   var effectLine = uploadPhotoForm.querySelector('.effect-level__line');
   var effectLevelInput = uploadPhotoForm.querySelector('.effect-level__value');
@@ -80,26 +107,20 @@
 
   var getEffectValue = function (effectLevel, effectName) {
     var effectValue = 1;
+    var effect = effects[effectName];
 
     switch (effectName) {
-      case 'effect-chrome': {
-        effectValue = effectLevel / EFFECT_MAX;
-        break;
-      }
+      case 'effect-chrome':
       case 'effect-sepia': {
         effectValue = effectLevel / EFFECT_MAX;
         break;
       }
-      case 'effect-marvin': {
-        effectValue = effectLevel;
-        break;
-      }
       case 'effect-phobos': {
-        effectValue = effectLevel * PHOBOS_MAX / EFFECT_MAX;
+        effectValue = effectLevel * effect.maxValue / EFFECT_MAX;
         break;
       }
       case 'effect-heat': {
-        effectValue = ((effectLevel < HEAT_MIN) ? 1 : effectLevel) * HEAT_MAX / EFFECT_MAX;
+        effectValue = ((effectLevel < effect.minValue) ? 1 : effectLevel) * effect.maxValue / EFFECT_MAX;
         break;
       }
       default: {
@@ -117,7 +138,6 @@
 
   var effectRadio = uploadPhotoForm.querySelectorAll('.effects__radio');
   var currentEffect;
-
   var previewPhoto = uploadPhotoForm.querySelector('.img-upload__preview');
 
   var setEffectClass = function (effectClassName) {
@@ -127,36 +147,14 @@
     previewPhoto.style.filter = '';
 
     effectLevel.style.display = '';
+    if (effectClassName === 'effect-none') {
+      effectLevel.style.display = 'none';
+    }
 
-    switch (effectClassName) {
-      case 'effect-chrome': {
-        previewPhoto.classList.add('.effects__preview--chrome');
-        previewPhoto.style.filter = 'grayscale(' + effectLevelInput.value + ')';
-        break;
-      }
-      case 'effect-sepia': {
-        previewPhoto.classList.add('.effects__preview--sepia');
-        previewPhoto.style.filter = 'sepia(' + effectLevelInput.value + ')';
-        break;
-      }
-      case 'effect-marvin': {
-        previewPhoto.classList.add('.effects__preview--marvin');
-        previewPhoto.style.filter = 'invert(' + effectLevelInput.value + '%)';
-        break;
-      }
-      case 'effect-phobos': {
-        previewPhoto.classList.add('.effects__preview--phobos');
-        previewPhoto.style.filter = 'blur(' + effectLevelInput.value + 'px)';
-        break;
-      }
-      case 'effect-heat': {
-        previewPhoto.classList.add('.effects__preview--heat');
-        previewPhoto.style.filter = 'brightness(' + effectLevelInput.value + ')';
-        break;
-      }
-      default: {
-        effectLevel.style.display = 'none';
-      }
+    var effect = effects[effectClassName];
+    if (effect) {
+      previewPhoto.classList.add('.effects__preview--' + effect.name);
+      previewPhoto.style.filter = effect.attribute + '(' + effectLevelInput.value + effect.unit + ')';
     }
   };
 
@@ -215,7 +213,7 @@
     decreaseImageSize();
   });
 
-  var onHashtagsCheck = function (evt) {
+  var validateHashtags = function (evt) {
     var target = evt.target;
 
     if (target.value === '') {
@@ -293,6 +291,6 @@
     }
   };
 
-  hashtagsInput.addEventListener('input', onHashtagsCheck);
+  hashtagsInput.addEventListener('input', validateHashtags);
   commentInput.addEventListener('input', onCommentCheck);
 })();

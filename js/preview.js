@@ -20,7 +20,7 @@
   });
 
   var oncloseBigPictureEscPress = function (evt) {
-    if (evt.key === window.gallery.escKey) {
+    if (evt.key === window.utils.escKey) {
       closeBigPicture();
     }
   };
@@ -45,21 +45,21 @@
     bigPicture.querySelectorAll('.social__comment').forEach(function (comment) {
       comment.remove();
     });
-    commentsList.insertAdjacentHTML('beforeend', generateCommentsStructure(window.gallery.photos[photoId].comments));
+    commentsList.insertAdjacentHTML('beforeend', generateCommentsStructure(window.data.userPhotos[photoId].comments));
   };
 
   var renderBigPicture = function (photoId) {
     var bigPictureImage = bigPicture.querySelector('.big-picture__img').querySelector('img');
-    bigPictureImage.setAttribute('src', window.gallery.photos[photoId].url);
+    bigPictureImage.setAttribute('src', window.data.userPhotos[photoId].url);
 
     var bigPictureLikes = bigPicture.querySelector('.likes-count');
-    bigPictureLikes.textContent = window.gallery.photos[photoId].likes;
+    bigPictureLikes.textContent = window.data.userPhotos[photoId].likes;
 
     var bigPictureComments = bigPicture.querySelector('.comments-count');
-    bigPictureComments.textContent = window.gallery.photos[photoId].comments.length;
+    bigPictureComments.textContent = window.data.userPhotos[photoId].comments.length;
 
     var bigPictureDescription = bigPicture.querySelector('.social__caption');
-    bigPictureDescription.textContent = window.gallery.photos[photoId].description;
+    bigPictureDescription.textContent = window.data.userPhotos[photoId].description;
 
     renderComments(photoId);
   };
@@ -90,7 +90,7 @@
   var onEnterPressUserPicture = function (evt) {
     var image = evt.target.querySelector('.picture__img');
     if (image && image.matches('img')) {
-      if (evt.key === window.gallery.enterKey) {
+      if (evt.key === window.data.enterKey) {
         showBigPicture(image.id);
       }
     }

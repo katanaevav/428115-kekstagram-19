@@ -19,10 +19,10 @@
   var renderPhotos = function (photosList) {
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < photosList.length; i++) {
-      fragment.appendChild(createUserPicture(window.gallery.photos[i]));
+      fragment.appendChild(createUserPicture(photosList[i]));
     }
     usersPictureList.appendChild(fragment);
   };
 
-  renderPhotos(window.gallery.photos);
+  renderPhotos(window.data.userPhotos);
 })();

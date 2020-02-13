@@ -21,35 +21,39 @@ window.data = (function () {
   ];
   var userNames = ['Иван', 'Артём', 'Мурзик', 'Жужа', 'Евгений', 'Петр', 'Маша'];
 
-  var getRandomValue = function (maxValue) {
-    return Math.floor(Math.random() * Math.floor(maxValue));
-  };
+  // var getRandomValue = function (maxValue) {
+  //   return Math.floor(Math.random() * Math.floor(maxValue));
+  // };
 
   var getComments = function (commentsCount) {
     var commentsArray = [];
     for (var i = 0; i < commentsCount; i++) {
       commentsArray.push({
-        avatar: 'img/avatar-' + (getRandomValue(AVARARS_COUNT) + AVARARS_START_NUMBER) + '.svg',
-        message: textComments[getRandomValue(TEXT_COMMENTS_COUNT)],
-        name: userNames[getRandomValue(USER_NAMES_COUNT)]
+        avatar: 'img/avatar-' + (window.utils.getRandomValue(AVARARS_COUNT) + AVARARS_START_NUMBER) + '.svg',
+        message: textComments[window.utils.getRandomValue(TEXT_COMMENTS_COUNT)],
+        name: userNames[window.utils.getRandomValue(USER_NAMES_COUNT)]
       });
     }
     return commentsArray;
   };
 
-  return {
-    getUserPhotos: function () {
-      var photoArray = [];
-      for (var i = 0; i < PHOTOS_COUNT; i++) {
-        photoArray.push({
-          url: 'photos/' + (i + 1) + '.jpg',
-          id: i,
-          description: 'Описание к фотографии № ' + (i + 1),
-          likes: getRandomValue(MAX_LIKES_COUNT) - MIN_LIKES_COUNT,
-          comments: getComments(getRandomValue(MAX_COMMENTS_COUNT) + MIN_COMMENTS_COUNT)
-        });
-      }
-      return photoArray;
+  var getUserPhotos = function () {
+    var photoArray = [];
+    for (var i = 0; i < PHOTOS_COUNT; i++) {
+      photoArray.push({
+        url: 'photos/' + (i + 1) + '.jpg',
+        id: i,
+        description: 'Описание к фотографии № ' + (i + 1),
+        likes: window.utils.getRandomValue(MAX_LIKES_COUNT) - MIN_LIKES_COUNT,
+        comments: getComments(window.utils.getRandomValue(MAX_COMMENTS_COUNT) + MIN_COMMENTS_COUNT)
+      });
     }
+    return photoArray;
+  };
+
+  var photos = getUserPhotos();
+
+  return {
+    userPhotos: photos
   };
 })();
