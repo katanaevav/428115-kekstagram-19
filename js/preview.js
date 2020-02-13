@@ -15,9 +15,7 @@
     document.removeEventListener('keydown', onCloseBigPictureEscPress);
   };
 
-  closeBigPictureButton.addEventListener('click', function () {
-    closeBigPicture();
-  });
+  closeBigPictureButton.addEventListener('click', closeBigPicture);
 
   var onCloseBigPictureEscPress = function (evt) {
     if (evt.key === window.utils.escKey) {

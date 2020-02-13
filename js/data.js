@@ -21,10 +21,6 @@ window.data = (function () {
   ];
   var userNames = ['Иван', 'Артём', 'Мурзик', 'Жужа', 'Евгений', 'Петр', 'Маша'];
 
-  // var getRandomValue = function (maxValue) {
-  //   return Math.floor(Math.random() * Math.floor(maxValue));
-  // };
-
   var getComments = function (commentsCount) {
     var commentsArray = [];
     for (var i = 0; i < commentsCount; i++) {
