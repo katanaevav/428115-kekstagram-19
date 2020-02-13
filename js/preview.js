@@ -2,7 +2,7 @@
 
 (function () {
   var pageBody = document.querySelector('body');
-  var pictureListElement = document.querySelector('.pictures');
+  var usersPictureList = document.querySelector('.pictures');
 
   var bigPicture = document.querySelector('.big-picture');
   var closeBigPictureButton = document.querySelector('#picture-cancel');
@@ -96,6 +96,6 @@
     }
   };
 
-  pictureListElement.addEventListener('click', onClickUserPicture);
-  pictureListElement.addEventListener('keydown', onEnterPressUserPicture);
+  usersPictureList.addEventListener('click', onClickUserPicture);
+  usersPictureList.addEventListener('keydown', onEnterPressUserPicture);
 })();
