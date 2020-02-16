@@ -132,7 +132,6 @@ window.imageEffect = (function () {
         };
         effectLevelPin.addEventListener('click', onClickPreventDefault);
       }
-
     };
 
     document.addEventListener('mousemove', onMouseMove);
