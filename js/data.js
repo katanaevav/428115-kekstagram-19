@@ -1,55 +1,60 @@
 'use strict';
 
 window.data = (function () {
-  var TEXT_COMMENTS_COUNT = 5;
-  var USER_NAMES_COUNT = 6;
-  var AVARARS_COUNT = 5;
-  var AVARARS_START_NUMBER = 1;
-  var MIN_COMMENTS_COUNT = 1;
-  var MAX_COMMENTS_COUNT = 10;
-  var MIN_LIKES_COUNT = 1;
-  var MAX_LIKES_COUNT = 200;
-  var PHOTOS_COUNT = 25;
-
-  var textComments = [
-    'Всё отлично!',
-    'В целом всё неплохо. Но не всё.',
-    'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
-    'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
-    'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
-    'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
-  ];
-  var userNames = ['Иван', 'Артём', 'Мурзик', 'Жужа', 'Евгений', 'Петр', 'Маша'];
-
-  var getComments = function (commentsCount) {
-    var commentsArray = [];
-    for (var i = 0; i < commentsCount; i++) {
-      commentsArray.push({
-        avatar: 'img/avatar-' + (window.utils.getRandomValue(AVARARS_COUNT) + AVARARS_START_NUMBER) + '.svg',
-        message: textComments[window.utils.getRandomValue(TEXT_COMMENTS_COUNT)],
-        name: userNames[window.utils.getRandomValue(USER_NAMES_COUNT)]
-      });
-    }
-    return commentsArray;
+  var QUERY_TIMEOUT = 10000;
+  var StatusCode = {
+    OK: 200
   };
+  var URL = 'https://js.dump.academy/kekstagram';
 
-  var getUserPhotos = function () {
-    var photoArray = [];
-    for (var i = 0; i < PHOTOS_COUNT; i++) {
-      photoArray.push({
-        url: 'photos/' + (i + 1) + '.jpg',
-        id: i,
-        description: 'Описание к фотографии № ' + (i + 1),
-        likes: window.utils.getRandomValue(MAX_LIKES_COUNT) - MIN_LIKES_COUNT,
-        comments: getComments(window.utils.getRandomValue(MAX_COMMENTS_COUNT) + MIN_COMMENTS_COUNT)
-      });
-    }
-    return photoArray;
+  var setup = function (onLoad, onError) {
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = 'json';
+
+    xhr.addEventListener('load', function () {
+      if (xhr.status === StatusCode.OK) {
+        onLoad(xhr.response);
+      } else {
+        onError('Cервер ответил: ' + xhr.status + ' ' + xhr.statusText);
+      }
+    });
+
+    xhr.addEventListener('error', function () {
+      onError('Ошибка соединения c сервером');
+    });
+    xhr.addEventListener('timeout', function () {
+      onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
+    });
+
+    xhr.timeout = QUERY_TIMEOUT;
+
+    return xhr;
   };
-
-  var photos = getUserPhotos();
 
   return {
-    userPhotos: photos
+
+    load: function (onLoad, onError) {
+      var xhr = setup(onLoad, onError);
+      xhr.open('GET', URL + '/data');
+      xhr.send();
+    },
+
+    error: function (errorMessage) {
+      var node = document.createElement('div');
+      node.style = 'z-index: 100; margin: 0 auto; padding: 10px; text-align: center; background-color: red;';
+      node.style.position = 'absolute';
+      node.style.left = '10px';
+      node.style.right = '10px';
+      node.style.top = '10px';
+      node.style.fontSize = '30px';
+      node.textContent = 'Ошибка:  "' + errorMessage + '"';
+      document.body.insertAdjacentElement('afterbegin', node);
+
+      setTimeout(function () {
+        node.remove();
+      }, 7000);
+    },
+
+    userPhotos: []
   };
 })();
