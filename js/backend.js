@@ -31,28 +31,30 @@ window.backend = (function () {
     return xhr;
   };
 
+  var load = function (onLoad, onError) {
+    var xhr = setup(onLoad, onError);
+    xhr.open('GET', URL + '/data');
+    xhr.send();
+  };
+
+  var error = function (errorMessage) {
+    var node = document.createElement('div');
+    node.style = 'z-index: 100; margin: 0 auto; padding: 10px; text-align: center; background-color: red;';
+    node.style.position = 'absolute';
+    node.style.left = '10px';
+    node.style.right = '10px';
+    node.style.top = '10px';
+    node.style.fontSize = '30px';
+    node.textContent = 'Ошибка:  "' + errorMessage + '"';
+    document.body.insertAdjacentElement('afterbegin', node);
+
+    setTimeout(function () {
+      node.remove();
+    }, 7000);
+  };
+
   return {
-
-    load: function (onLoad, onError) {
-      var xhr = setup(onLoad, onError);
-      xhr.open('GET', URL + '/data');
-      xhr.send();
-    },
-
-    error: function (errorMessage) {
-      var node = document.createElement('div');
-      node.style = 'z-index: 100; margin: 0 auto; padding: 10px; text-align: center; background-color: red;';
-      node.style.position = 'absolute';
-      node.style.left = '10px';
-      node.style.right = '10px';
-      node.style.top = '10px';
-      node.style.fontSize = '30px';
-      node.textContent = 'Ошибка:  "' + errorMessage + '"';
-      document.body.insertAdjacentElement('afterbegin', node);
-
-      setTimeout(function () {
-        node.remove();
-      }, 7000);
-    }
+    load: load,
+    error: error
   };
 })();

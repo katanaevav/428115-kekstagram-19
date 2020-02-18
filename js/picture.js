@@ -2,6 +2,7 @@
 
 window.picture = (function () {
   var usersPictureList = document.querySelector('.pictures');
+  var photos = [];
 
   var userPictureTemplate = document.querySelector('#picture')
       .content
@@ -16,15 +17,18 @@ window.picture = (function () {
     return userPicture;
   };
 
-  var onRenderPhotos = function (photosList) {
+  var renderPhotos = function (photosList) {
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < photosList.length; i++) {
       fragment.appendChild(createUserPicture(photosList[i], i));
-      window.data.userPhotos.push(photosList[i]);
+      photos.push(photosList[i]);
     }
     usersPictureList.appendChild(fragment);
   };
 
-  window.backend.load(onRenderPhotos, window.backend.error);
+  window.backend.load(renderPhotos, window.backend.error);
 
+  return {
+    userPhotos: photos
+  };
 })();

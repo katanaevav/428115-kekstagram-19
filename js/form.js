@@ -10,13 +10,15 @@
   var commentInput = uploadPhotoForm.querySelector('.text__description');
 
   var openUploadForm = function () {
-    if (imgUploadOverlay.classList.contains('hidden')) {
-      imgUploadOverlay.classList.remove('hidden');
+    if (!pageBody.classList.contains('modal-open')) {
+      if (imgUploadOverlay.classList.contains('hidden')) {
+        imgUploadOverlay.classList.remove('hidden');
+      }
+      window.imageScale.setDefaultScale();
+      window.imageEffect.setDefaultEffect();
+      pageBody.classList.add('modal-open');
+      document.addEventListener('keydown', onCloseUploadEscPress);
     }
-    window.imageScale.setDefaultScale();
-    window.imageEffect.setDefaultEffect();
-    pageBody.classList.add('modal-open');
-    document.addEventListener('keydown', onCloseUploadEscPress);
   };
 
   var closeUploadForm = function () {
@@ -28,12 +30,19 @@
     uploadFileInput.value = '';
   };
 
+  var openFile = function (evt) {
+    if (pageBody.classList.contains('modal-open')) {
+      evt.preventDefault();
+    }
+  };
+
+  uploadFileInput.addEventListener('keypress', openFile);
   uploadFileInput.addEventListener('change', openUploadForm);
   closeUploadFormButton.addEventListener('click', closeUploadForm);
 
   var onCloseUploadEscPress = function (evt) {
     if ((document.activeElement !== hashtagsInput) && (document.activeElement !== commentInput)) {
-      if (evt.key === window.utils.escKey) {
+      if (evt.key === window.preview.escKey) {
         closeUploadForm();
       }
     }
