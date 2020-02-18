@@ -17,6 +17,7 @@
     window.imageEffect.setDefaultEffect();
     pageBody.classList.add('modal-open');
     document.addEventListener('keydown', onCloseUploadEscPress);
+    window.preview.uploadFormOpened = true;
   };
 
   var closeUploadForm = function () {
@@ -26,14 +27,22 @@
     }
     document.removeEventListener('keydown', onCloseUploadEscPress);
     uploadFileInput.value = '';
+    window.preview.uploadFormOpened = false;
   };
 
+  var openFile = function (evt) {
+    if (pageBody.classList.contains('modal-open')) {
+      evt.preventDefault();
+    }
+  };
+
+  uploadFileInput.addEventListener('keypress', openFile);
   uploadFileInput.addEventListener('change', openUploadForm);
   closeUploadFormButton.addEventListener('click', closeUploadForm);
 
   var onCloseUploadEscPress = function (evt) {
     if ((document.activeElement !== hashtagsInput) && (document.activeElement !== commentInput)) {
-      if (evt.key === window.utils.escKey) {
+      if (evt.key === window.preview.escKey) {
         closeUploadForm();
       }
     }

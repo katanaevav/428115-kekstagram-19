@@ -1,6 +1,11 @@
 'use strict';
 
 (function () {
+  var ESC_KEY = 'Escape';
+  var ENTER_KEY = 'Enter';
+
+  var uploadFormOpened = false;
+
   var pageBody = document.querySelector('body');
   var usersPictureList = document.querySelector('.pictures');
 
@@ -18,7 +23,7 @@
   closeBigPictureButton.addEventListener('click', closeBigPicture);
 
   var onCloseBigPictureEscPress = function (evt) {
-    if (evt.key === window.utils.escKey) {
+    if (evt.key === ESC_KEY) {
       closeBigPicture();
     }
   };
@@ -43,21 +48,21 @@
     bigPicture.querySelectorAll('.social__comment').forEach(function (comment) {
       comment.remove();
     });
-    commentsList.insertAdjacentHTML('beforeend', generateCommentsStructure(window.data.userPhotos[photoId].comments));
+    commentsList.insertAdjacentHTML('beforeend', generateCommentsStructure(window.picture.userPhotos[photoId].comments));
   };
 
   var renderBigPicture = function (photoId) {
     var bigPictureImage = bigPicture.querySelector('.big-picture__img').querySelector('img');
-    bigPictureImage.setAttribute('src', window.data.userPhotos[photoId].url);
+    bigPictureImage.setAttribute('src', window.picture.userPhotos[photoId].url);
 
     var bigPictureLikes = bigPicture.querySelector('.likes-count');
-    bigPictureLikes.textContent = window.data.userPhotos[photoId].likes;
+    bigPictureLikes.textContent = window.picture.userPhotos[photoId].likes;
 
     var bigPictureComments = bigPicture.querySelector('.comments-count');
-    bigPictureComments.textContent = window.data.userPhotos[photoId].comments.length;
+    bigPictureComments.textContent = window.picture.userPhotos[photoId].comments.length;
 
     var bigPictureDescription = bigPicture.querySelector('.social__caption');
-    bigPictureDescription.textContent = window.data.userPhotos[photoId].description;
+    bigPictureDescription.textContent = window.picture.userPhotos[photoId].description;
 
     renderComments(photoId);
   };
@@ -87,8 +92,8 @@
 
   var onEnterPressUserPicture = function (evt) {
     var image = evt.target.querySelector('.picture__img');
-    if (image && image.matches('img')) {
-      if (evt.key === window.data.enterKey) {
+    if (image && image.matches('img') && !window.preview.uploadFormOpened) {
+      if (evt.key === ENTER_KEY) {
         showBigPicture(image.id);
       }
     }
@@ -96,4 +101,9 @@
 
   usersPictureList.addEventListener('click', onClickUserPicture);
   usersPictureList.addEventListener('keydown', onEnterPressUserPicture);
+
+  window.preview = {
+    escKey: ESC_KEY,
+    uploadFormOpened: uploadFormOpened
+  };
 })();
