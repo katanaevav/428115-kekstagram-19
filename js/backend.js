@@ -1,7 +1,8 @@
 'use strict';
 
-window.backend = (function () {
+(function () {
   var QUERY_TIMEOUT = 10000;
+  var TIME_TO_HIDE_MESSAGE = 7000;
   var StatusCode = {
     OK: 200
   };
@@ -50,10 +51,10 @@ window.backend = (function () {
 
     setTimeout(function () {
       node.remove();
-    }, 7000);
+    }, TIME_TO_HIDE_MESSAGE);
   };
 
-  return {
+  window.backend = {
     load: load,
     error: error
   };

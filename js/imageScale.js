@@ -1,6 +1,6 @@
 'use strict';
 
-window.imageScale = (function () {
+(function () {
   var SCALE_MIN = 25;
   var SCALE_MAX = 100;
   var SCALE_DEFAULT = '100';
@@ -37,9 +37,11 @@ window.imageScale = (function () {
 
   scaleMinusButton.addEventListener('click', decreaseImageSize);
 
-  return {
-    setDefaultScale: function () {
-      setScaleValue(SCALE_DEFAULT);
-    }
+  var setDefaultScaleValue = function () {
+    setScaleValue(SCALE_DEFAULT);
+  };
+
+  window.imageScale = {
+    setDefaultScale: setDefaultScaleValue
   };
 })();

@@ -1,6 +1,6 @@
 'use strict';
 
-window.picture = (function () {
+(function () {
   var usersPictureList = document.querySelector('.pictures');
   var photos = [];
 
@@ -8,10 +8,10 @@ window.picture = (function () {
       .content
       .querySelector('.picture');
 
-  var createUserPicture = function (picture, pid) {
+  var createUserPicture = function (picture, pictureId) {
     var userPicture = userPictureTemplate.cloneNode(true);
     userPicture.querySelector('.picture__img').src = picture.url;
-    userPicture.querySelector('.picture__img').id = pid;
+    userPicture.querySelector('.picture__img').id = pictureId;
     userPicture.querySelector('.picture__likes').textContent = picture.likes;
     userPicture.querySelector('.picture__comments').textContent = picture.comments.length;
     return userPicture;
@@ -28,7 +28,7 @@ window.picture = (function () {
 
   window.backend.load(renderPhotos, window.backend.error);
 
-  return {
+  window.picture = {
     userPhotos: photos
   };
 })();

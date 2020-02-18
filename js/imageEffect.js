@@ -1,6 +1,6 @@
 'use strict';
 
-window.imageEffect = (function () {
+(function () {
   var EFFECT_DEFAULT = 100;
   var EFFECT_MAX = 100;
   var EFFECT_NAME_DEFAULT = 'effect-none';
@@ -179,9 +179,11 @@ window.imageEffect = (function () {
 
   setEventsOnEffectRadio();
 
-  return {
-    setDefaultEffect: function () {
-      setEffectClass(EFFECT_NAME_DEFAULT);
-    }
+  var setDefaultEffectClass = function () {
+    setEffectClass(EFFECT_NAME_DEFAULT);
+  };
+
+  window.imageEffect = {
+    setDefaultEffect: setDefaultEffectClass
   };
 })();

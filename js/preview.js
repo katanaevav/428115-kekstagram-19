@@ -1,8 +1,10 @@
 'use strict';
 
-window.preview = (function () {
+(function () {
   var ESC_KEY = 'Escape';
   var ENTER_KEY = 'Enter';
+
+  var uploadFormOpened = false;
 
   var pageBody = document.querySelector('body');
   var usersPictureList = document.querySelector('.pictures');
@@ -90,7 +92,7 @@ window.preview = (function () {
 
   var onEnterPressUserPicture = function (evt) {
     var image = evt.target.querySelector('.picture__img');
-    if (image && image.matches('img') && !pageBody.classList.contains('modal-open')) {
+    if (image && image.matches('img') && !window.preview.uploadFormOpened) {
       if (evt.key === ENTER_KEY) {
         showBigPicture(image.id);
       }
@@ -100,7 +102,8 @@ window.preview = (function () {
   usersPictureList.addEventListener('click', onClickUserPicture);
   usersPictureList.addEventListener('keydown', onEnterPressUserPicture);
 
-  return {
-    escKey: ESC_KEY
+  window.preview = {
+    escKey: ESC_KEY,
+    uploadFormOpened: uploadFormOpened
   };
 })();

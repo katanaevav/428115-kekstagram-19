@@ -10,15 +10,14 @@
   var commentInput = uploadPhotoForm.querySelector('.text__description');
 
   var openUploadForm = function () {
-    if (!pageBody.classList.contains('modal-open')) {
-      if (imgUploadOverlay.classList.contains('hidden')) {
-        imgUploadOverlay.classList.remove('hidden');
-      }
-      window.imageScale.setDefaultScale();
-      window.imageEffect.setDefaultEffect();
-      pageBody.classList.add('modal-open');
-      document.addEventListener('keydown', onCloseUploadEscPress);
+    if (imgUploadOverlay.classList.contains('hidden')) {
+      imgUploadOverlay.classList.remove('hidden');
     }
+    window.imageScale.setDefaultScale();
+    window.imageEffect.setDefaultEffect();
+    pageBody.classList.add('modal-open');
+    document.addEventListener('keydown', onCloseUploadEscPress);
+    window.preview.uploadFormOpened = true;
   };
 
   var closeUploadForm = function () {
@@ -28,6 +27,7 @@
     }
     document.removeEventListener('keydown', onCloseUploadEscPress);
     uploadFileInput.value = '';
+    window.preview.uploadFormOpened = false;
   };
 
   var openFile = function (evt) {
