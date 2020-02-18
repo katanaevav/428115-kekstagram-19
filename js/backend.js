@@ -38,6 +38,12 @@
     xhr.send();
   };
 
+  var save = function (data, onLoad, onError) {
+    var xhr = setup(onLoad, onError);
+    xhr.open('POST', URL);
+    xhr.send(data);
+  };
+
   var error = function (errorMessage) {
     var node = document.createElement('div');
     node.style = 'z-index: 100; margin: 0 auto; padding: 10px; text-align: center; background-color: red;';
@@ -56,6 +62,7 @@
 
   window.backend = {
     load: load,
+    save: save,
     error: error
   };
 })();
