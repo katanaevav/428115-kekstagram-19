@@ -88,7 +88,7 @@
   var onEnterPressUserPicture = function (evt) {
     var image = evt.target.querySelector('.picture__img');
     if (image && image.matches('img')) {
-      if (evt.key === window.data.enterKey) {
+      if (evt.key === window.utils.enterKey) {
         showBigPicture(image.id);
       }
     }

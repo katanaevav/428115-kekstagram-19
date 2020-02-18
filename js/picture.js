@@ -25,6 +25,6 @@ window.picture = (function () {
     usersPictureList.appendChild(fragment);
   };
 
-  window.data.load(onRenderPhotos, window.data.error);
+  window.backend.load(onRenderPhotos, window.backend.error);
 
 })();
