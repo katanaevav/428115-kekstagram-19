@@ -47,4 +47,16 @@
       }
     }
   };
+
+  var form = document.querySelector('.img-upload__form');
+
+  var onSuccessSave = function () {
+    imgUploadOverlay.classList.add('hidden');
+    console.log('Data send');
+  };
+
+  form.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    window.backend.save(new FormData(form), onSuccessSave, window.backend.error);
+  });
 })();
