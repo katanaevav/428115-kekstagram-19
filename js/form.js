@@ -1,6 +1,9 @@
 'use strict';
 
 (function () {
+  var ERROR_MESSAGE = 'error';
+  var SUCCESS_MESSAGE = 'success';
+
   var pageBody = document.querySelector('body');
   var uploadPhotoForm = document.querySelector('.img-upload');
   var uploadFileInput = uploadPhotoForm.querySelector('#upload-file');
@@ -55,7 +58,6 @@
   var form = document.querySelector('.img-upload__form');
 
   var generateMessage = function (messageType) {
-    var ERROR_MESSAGE = 'error';
     var messageTemplate = document.querySelector('#' + messageType)
       .content
       .querySelector('.' + messageType);
@@ -92,12 +94,12 @@
 
   var onSuccessSave = function () {
     imgUploadOverlay.classList.add('hidden');
-    generateMessage('success');
+    generateMessage(SUCCESS_MESSAGE);
   };
 
   var onErrorSave = function () {
     closeUploadForm();
-    generateMessage('error');
+    generateMessage(ERROR_MESSAGE);
   };
 
   form.addEventListener('submit', function (evt) {

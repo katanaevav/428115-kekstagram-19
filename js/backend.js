@@ -6,7 +6,7 @@
   var StatusCode = {
     OK: 200
   };
-  var URL = 'https://js.dump.academy/kekstagram1';
+  var URL = 'https://js.dump.academy/kekstagram';
 
   var setup = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
