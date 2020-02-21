@@ -52,11 +52,74 @@
 
   var onSuccessSave = function () {
     imgUploadOverlay.classList.add('hidden');
-    console.log('Data send');
+
+    (function () {
+      var successMessageTemplate = document.querySelector('#success')
+      .content
+      .querySelector('.success');
+      var successMessage = successMessageTemplate.cloneNode(true);
+      var fragment = document.createDocumentFragment();
+      fragment.appendChild(successMessage);
+      var mainBlock = document.querySelector('main');
+      mainBlock.appendChild(fragment);
+
+      var messageWindow = document.querySelector('.success');
+
+      var closeMessage = function () {
+        messageWindow.remove();
+        document.removeEventListener('keydown', onEscPress);
+      };
+
+      var onEscPress = function (evt) {
+        if (evt.key === window.preview.escKey) {
+          closeMessage();
+        }
+      };
+
+      var successButton = document.querySelector('.success__button');
+      successButton.addEventListener('click', closeMessage);
+      messageWindow.addEventListener('click', closeMessage);
+      document.addEventListener('keydown', onEscPress);
+    })();
+  };
+
+  var onErrorSave = function () {
+    closeUploadForm();
+    var errorMessageTemplate = document.querySelector('#error')
+    .content
+    .querySelector('.error');
+    var errorMessage = errorMessageTemplate.cloneNode(true);
+    var fragment = document.createDocumentFragment();
+    fragment.appendChild(errorMessage);
+    var mainBlock = document.querySelector('main');
+    mainBlock.appendChild(fragment);
+
+    var messageWindow = document.querySelector('.error');
+
+    var closeMessage = function () {
+      messageWindow.remove();
+      document.removeEventListener('keydown', onEscPress);
+    };
+
+    var closeMessageWithButton = function () {
+      closeMessage();
+      uploadFileInput.click();
+    };
+
+    var onEscPress = function (evt) {
+      if (evt.key === window.preview.escKey) {
+        closeMessage();
+      }
+    };
+
+    var errorButton = document.querySelector('.error__button');
+    errorButton.addEventListener('click', closeMessageWithButton);
+    messageWindow.addEventListener('click', closeMessage);
+    document.addEventListener('keydown', onEscPress);
   };
 
   form.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    window.backend.save(new FormData(form), onSuccessSave, window.backend.error);
+    window.backend.save(new FormData(form), onSuccessSave, onErrorSave);
   });
 })();
