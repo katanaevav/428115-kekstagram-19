@@ -6,7 +6,7 @@
   var StatusCode = {
     OK: 200
   };
-  var URL = 'https://js.dump.academy/kekstagram';
+  var URL = 'https://js.dump.academy/kekstagram1';
 
   var setup = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
@@ -44,7 +44,7 @@
     xhr.send(data);
   };
 
-  var error = function errorMessage() {
+  var error = function errorMessage(message) {
     var node = document.createElement('div');
     node.style = 'z-index: 100; margin: 0 auto; padding: 10px; text-align: center; background-color: red;';
     node.style.position = 'absolute';
@@ -52,7 +52,7 @@
     node.style.right = '10px';
     node.style.top = '10px';
     node.style.fontSize = '30px';
-    node.textContent = 'Ошибка:  "' + errorMessage + '"';
+    node.textContent = 'Ошибка:  "' + message + '"';
     document.body.insertAdjacentElement('afterbegin', node);
 
     setTimeout(function () {
