@@ -70,26 +70,26 @@
 
     var closeMessage = function () {
       messageWindow.remove();
-      document.removeEventListener('keydown', onEscPress);
+      document.removeEventListener('keydown', onEscButtonPress);
     };
 
-    var closeMessageWithButton = function () {
+    var onCloseButtonClick = function () {
       closeMessage();
       if (messageType === ERROR_MESSAGE) {
         uploadFileInput.click();
       }
     };
 
-    var onEscPress = function (evt) {
+    var onEscButtonPress = function (evt) {
       if (evt.key === window.preview.escKey) {
         closeMessage();
       }
     };
 
     var button = document.querySelector('.' + messageType + '__button');
-    button.addEventListener('click', closeMessageWithButton);
+    button.addEventListener('click', onCloseButtonClick);
     messageWindow.addEventListener('click', closeMessage);
-    document.addEventListener('keydown', onEscPress);
+    document.addEventListener('keydown', onEscButtonPress);
   };
 
   var onSuccessSave = function () {
