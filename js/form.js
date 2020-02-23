@@ -1,9 +1,6 @@
 'use strict';
 
 (function () {
-  var ERROR_MESSAGE = 'error';
-  var SUCCESS_MESSAGE = 'success';
-
   var pageBody = document.querySelector('body');
   var uploadPhotoForm = document.querySelector('.img-upload');
   var uploadFileInput = uploadPhotoForm.querySelector('#upload-file');
@@ -56,45 +53,8 @@
 
   var form = document.querySelector('.img-upload__form');
 
-  // var generateMessage = function (messageType) {
-  //   var messageTemplate = document.querySelector('#' + messageType)
-  //     .content
-  //     .querySelector('.' + messageType);
-  //   var message = messageTemplate.cloneNode(true);
-  //   var fragment = document.createDocumentFragment();
-  //   fragment.appendChild(message);
-  //   var mainBlock = document.querySelector('main');
-  //   mainBlock.appendChild(fragment);
-  //   var messageWindow = document.querySelector('.' + messageType);
-
-  //   var closeMessage = function () {
-  //     messageWindow.remove();
-  //     document.removeEventListener('keydown', onEscButtonPress);
-  //   };
-
-  //   var onCloseButtonClick = function () {
-  //     closeMessage();
-  //     if (messageType === ERROR_MESSAGE) {
-  //       uploadFileInput.click();
-  //     }
-  //   };
-
-  //   var onEscButtonPress = function (evt) {
-  //     if (evt.key === window.preview.escKey) {
-  //       closeMessage();
-  //     }
-  //   };
-
-  //   var button = (messageType === SUCCESS_MESSAGE) ? document.querySelector('.success__button') : document.querySelector('.error__button');
-
-  //   button.addEventListener('click', onCloseButtonClick);
-  //   messageWindow.addEventListener('click', closeMessage);
-  //   document.addEventListener('keydown', onEscButtonPress);
-  // };
-
   var onSuccessSave = function () {
     imgUploadOverlay.classList.add('hidden');
-    // generateMessage(SUCCESS_MESSAGE);
     var messageTemplate = document.querySelector('#success')
       .content
       .querySelector('.success');
@@ -125,7 +85,6 @@
 
   var onErrorSave = function () {
     closeUploadForm();
-    // generateMessage(ERROR_MESSAGE);
     var messageTemplate = document.querySelector('#error')
       .content
       .querySelector('.error');
