@@ -38,7 +38,13 @@
     xhr.send();
   };
 
-  var error = function (errorMessage) {
+  var save = function (data, onLoad, onError) {
+    var xhr = setup(onLoad, onError);
+    xhr.open('POST', URL);
+    xhr.send(data);
+  };
+
+  var error = function errorMessage(message) {
     var node = document.createElement('div');
     node.style = 'z-index: 100; margin: 0 auto; padding: 10px; text-align: center; background-color: red;';
     node.style.position = 'absolute';
@@ -46,7 +52,7 @@
     node.style.right = '10px';
     node.style.top = '10px';
     node.style.fontSize = '30px';
-    node.textContent = 'Ошибка:  "' + errorMessage + '"';
+    node.textContent = 'Ошибка:  "' + message + '"';
     document.body.insertAdjacentElement('afterbegin', node);
 
     setTimeout(function () {
@@ -56,6 +62,7 @@
 
   window.backend = {
     load: load,
+    save: save,
     error: error
   };
 })();
