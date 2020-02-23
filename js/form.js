@@ -66,6 +66,7 @@
     var messageWindow = document.querySelector('.success');
 
     var closeMessage = function () {
+      closeUploadForm();
       messageWindow.remove();
       document.removeEventListener('keydown', onEscButtonPress);
     };
@@ -84,7 +85,6 @@
   };
 
   var onErrorSave = function () {
-    closeUploadForm();
     var messageTemplate = document.querySelector('#error')
       .content
       .querySelector('.error');
@@ -96,6 +96,7 @@
     var messageWindow = document.querySelector('.error');
 
     var closeMessage = function () {
+      closeUploadForm();
       messageWindow.remove();
       document.removeEventListener('keydown', onEscButtonPress);
     };
