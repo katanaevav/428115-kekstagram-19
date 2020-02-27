@@ -56,18 +56,27 @@
         for (var i = 0; i < RANDOM_PHOTOS_COUNT; i++) {
           window.picture.filteredPhotos.push(window.picture.userPhotos[randomArray[i]]);
         }
-        window.picture.renderFilteredPhotos(window.picture.filteredPhotos);
         break;
       case DISSCUSSED_PHOTOS:
-
-        window.picture.renderFilteredPhotos(window.picture.filteredPhotos);
+        window.picture.filteredPhotos = window.picture.userPhotos.map(function (item) {
+          return item;
+        });
+        window.picture.filteredPhotos.sort(function (first, second) {
+          if (first.comments.length < second.comments.length) {
+            return 1;
+          } else if (first.comments.length > second.comments.length) {
+            return -1;
+          } else {
+            return 0;
+          }
+        });
         break;
       default:
         window.picture.filteredPhotos = window.picture.userPhotos.map(function (item) {
           return item;
         });
-        window.picture.renderFilteredPhotos(window.picture.filteredPhotos);
     }
+    window.picture.renderFilteredPhotos(window.picture.filteredPhotos);
   });
 
   var filterFormButtonClick = function (evt) {
