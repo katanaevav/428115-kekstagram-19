@@ -3,6 +3,7 @@
 (function () {
   var usersPictureList = document.querySelector('.pictures');
   var photos = [];
+  var filteredPhotos = [];
 
   var userPictureTemplate = document.querySelector('#picture')
       .content
@@ -22,6 +23,23 @@
     for (var i = 0; i < photosList.length; i++) {
       fragment.appendChild(createUserPicture(photosList[i], i));
       photos.push(photosList[i]);
+      filteredPhotos.push(photosList[i]);
+    }
+    usersPictureList.appendChild(fragment);
+  };
+
+  var removeUsersPhotos = function () {
+    var userPictures = usersPictureList.querySelectorAll('.picture');
+    userPictures.forEach(function (item) {
+      item.remove();
+    });
+  };
+
+  var renderFilteredPhotos = function (photosList) {
+    removeUsersPhotos();
+    var fragment = document.createDocumentFragment();
+    for (var i = 0; i < photosList.length; i++) {
+      fragment.appendChild(createUserPicture(photosList[i], i));
     }
     usersPictureList.appendChild(fragment);
   };
@@ -29,6 +47,8 @@
   window.backend.load(renderPhotos, window.backend.error);
 
   window.picture = {
-    userPhotos: photos
+    userPhotos: photos,
+    filteredPhotos: filteredPhotos,
+    renderFilteredPhotos: renderFilteredPhotos
   };
 })();
