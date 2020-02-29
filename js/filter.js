@@ -1,42 +1,6 @@
 'use strict';
 
 (function () {
-  var DEBOUNCE_INTERVAL = 300; // ms
-
-  window.debounce = function (cb) {
-    var lastTimeout = null;
-
-    return function () {
-      var parameters = arguments;
-      if (lastTimeout) {
-        window.clearTimeout(lastTimeout);
-      }
-      lastTimeout = window.setTimeout(function () {
-        cb.apply(null, parameters);
-      }, DEBOUNCE_INTERVAL);
-    };
-  };
-})();
-
-(function () {
-  var randomNumbersArray = function (minNumber, maxNumber, count) {
-    var array = [];
-    var number;
-    while (array.length < count) {
-      number = Math.floor((minNumber + Math.random()) * maxNumber);
-      if (array.indexOf(number) === -1) {
-        array.push(number);
-      }
-    }
-    return array;
-  };
-
-  window.filter = {
-    randomNumbersArray: randomNumbersArray
-  };
-})();
-
-(function () {
   var RANDOM_PHOTOS = 'filter-random';
   var RANDOM_PHOTOS_START = 0;
   var RANDOM_PHOTOS_COUNT = 10;
@@ -48,33 +12,45 @@
   }
   var filterForm = filterPanel.querySelector('.img-filters__form');
 
+  var getRandomPhotos = function (photos) {
+    var randomArray = window.utils.getRandomNumbers(RANDOM_PHOTOS_START, window.picture.userPhotos.length - 1, RANDOM_PHOTOS_COUNT);
+    window.picture.filteredPhotos = [];
+    for (var i = 0; i < RANDOM_PHOTOS_COUNT; i++) {
+      window.picture.filteredPhotos.push(photos[randomArray[i]]);
+    }
+  };
+
+  var getDisscussedPhotos = function (photos) {
+    window.picture.filteredPhotos = photos.map(function (item) {
+      return item;
+    });
+    window.picture.filteredPhotos.sort(function (first, second) {
+      if (first.comments.length < second.comments.length) {
+        return 1;
+      } else if (first.comments.length > second.comments.length) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
+  };
+
+  var getPhotos = function (photos) {
+    window.picture.filteredPhotos = photos.map(function (item) {
+      return item;
+    });
+  };
+
   var setFilter = window.debounce(function (target) {
     switch (target.id) {
       case RANDOM_PHOTOS:
-        var randomArray = window.filter.randomNumbersArray(RANDOM_PHOTOS_START, window.picture.userPhotos.length - 1, RANDOM_PHOTOS_COUNT);
-        window.picture.filteredPhotos = [];
-        for (var i = 0; i < RANDOM_PHOTOS_COUNT; i++) {
-          window.picture.filteredPhotos.push(window.picture.userPhotos[randomArray[i]]);
-        }
+        getRandomPhotos(window.picture.userPhotos);
         break;
       case DISSCUSSED_PHOTOS:
-        window.picture.filteredPhotos = window.picture.userPhotos.map(function (item) {
-          return item;
-        });
-        window.picture.filteredPhotos.sort(function (first, second) {
-          if (first.comments.length < second.comments.length) {
-            return 1;
-          } else if (first.comments.length > second.comments.length) {
-            return -1;
-          } else {
-            return 0;
-          }
-        });
+        getDisscussedPhotos(window.picture.userPhotos);
         break;
       default:
-        window.picture.filteredPhotos = window.picture.userPhotos.map(function (item) {
-          return item;
-        });
+        getPhotos(window.picture.userPhotos);
     }
     window.picture.renderFilteredPhotos(window.picture.filteredPhotos);
   });
