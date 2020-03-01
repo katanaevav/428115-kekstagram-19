@@ -4,6 +4,7 @@
   var ESC_KEY = 'Escape';
   var ENTER_KEY = 'Enter';
   var MAX_COMMENTS_LOAD = 5;
+  var START_COMMENT = 0;
 
   var uploadFormOpened = false;
   var renderedComments;
@@ -63,13 +64,13 @@
     bigPicture.querySelectorAll('.social__comment').forEach(function (comment) {
       comment.remove();
     });
-    commentsList.insertAdjacentHTML('beforeend', generateCommentsStructure(photoObj.comments.slice(0, MAX_COMMENTS_LOAD)));
+    commentsList.insertAdjacentHTML('beforeend', generateCommentsStructure(photoObj.comments.slice(START_COMMENT, MAX_COMMENTS_LOAD)));
     renderedComments = MAX_COMMENTS_LOAD;
     displayLoadCommentsButton(photoObj);
   };
 
   var renderMoreComments = function (photoObj) {
-    var endCommentNumber = (photoObj.comments.length - renderedComments > 5) ? renderedComments + 5 : photoObj.comments.length;
+    var endCommentNumber = (photoObj.comments.length - renderedComments > MAX_COMMENTS_LOAD) ? renderedComments + MAX_COMMENTS_LOAD : photoObj.comments.length;
     commentsList.insertAdjacentHTML('beforeend', generateCommentsStructure(photoObj.comments.slice(renderedComments, endCommentNumber)));
     renderedComments = endCommentNumber;
     displayLoadCommentsButton(photoObj);
