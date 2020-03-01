@@ -3,14 +3,20 @@
 (function () {
   var ESC_KEY = 'Escape';
   var ENTER_KEY = 'Enter';
+  var MAX_COMMENTS_LOAD = 5;
+  var START_COMMENT = 0;
 
   var uploadFormOpened = false;
+  var renderedComments;
+  var currentPhotoId;
 
   var pageBody = document.querySelector('body');
   var usersPictureList = document.querySelector('.pictures');
 
   var bigPicture = document.querySelector('.big-picture');
   var closeBigPictureButton = document.querySelector('#picture-cancel');
+  var loadCommentsButton = bigPicture.querySelector('.comments-loader');
+  var commentsList = bigPicture.querySelector('.social__comments');
 
   var closeBigPicture = function () {
     bigPicture.classList.add('hidden');
@@ -20,6 +26,9 @@
     document.removeEventListener('keydown', onCloseBigPictureEscPress);
   };
 
+  loadCommentsButton.addEventListener('click', function () {
+    renderMoreComments(window.picture.filteredPhotos[currentPhotoId]);
+  });
   closeBigPictureButton.addEventListener('click', closeBigPicture);
 
   var onCloseBigPictureEscPress = function (evt) {
@@ -43,12 +52,28 @@
     return htmlStructure;
   };
 
+  var displayLoadCommentsButton = function (photoObj) {
+    if (renderedComments < photoObj.comments.length) {
+      loadCommentsButton.classList.remove('hidden');
+    } else {
+      loadCommentsButton.classList.add('hidden');
+    }
+  };
+
   var renderComments = function (photoObj) {
-    var commentsList = bigPicture.querySelector('.social__comments');
     bigPicture.querySelectorAll('.social__comment').forEach(function (comment) {
       comment.remove();
     });
-    commentsList.insertAdjacentHTML('beforeend', generateCommentsStructure(photoObj.comments));
+    commentsList.insertAdjacentHTML('beforeend', generateCommentsStructure(photoObj.comments.slice(START_COMMENT, MAX_COMMENTS_LOAD)));
+    renderedComments = MAX_COMMENTS_LOAD;
+    displayLoadCommentsButton(photoObj);
+  };
+
+  var renderMoreComments = function (photoObj) {
+    var endCommentNumber = (photoObj.comments.length - renderedComments > MAX_COMMENTS_LOAD) ? renderedComments + MAX_COMMENTS_LOAD : photoObj.comments.length;
+    commentsList.insertAdjacentHTML('beforeend', generateCommentsStructure(photoObj.comments.slice(renderedComments, endCommentNumber)));
+    renderedComments = endCommentNumber;
+    displayLoadCommentsButton(photoObj);
   };
 
   var renderBigPicture = function (photoObj) {
@@ -66,6 +91,7 @@
     }
     pageBody.classList.add('modal-open');
     document.addEventListener('keydown', onCloseBigPictureEscPress);
+    currentPhotoId = photoId;
   };
 
   var socialCommentsCount = document.querySelector('.social__comment-count');
