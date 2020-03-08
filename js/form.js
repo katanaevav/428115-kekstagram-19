@@ -54,6 +54,7 @@
   var form = document.querySelector('.img-upload__form');
 
   var onSuccessSave = function () {
+    closeUploadForm();
     imgUploadOverlay.classList.add('hidden');
     var messageTemplate = document.querySelector('#success')
       .content
@@ -66,7 +67,6 @@
     var messageWindow = document.querySelector('.success');
 
     var closeMessage = function () {
-      closeUploadForm();
       messageWindow.remove();
       document.removeEventListener('keydown', onEscButtonPress);
     };
@@ -85,6 +85,7 @@
   };
 
   var onErrorSave = function () {
+    closeUploadForm();
     var messageTemplate = document.querySelector('#error')
       .content
       .querySelector('.error');
@@ -96,7 +97,7 @@
     var messageWindow = document.querySelector('.error');
 
     var closeMessage = function () {
-      closeUploadForm();
+      // closeUploadForm();
       messageWindow.remove();
       document.removeEventListener('keydown', onEscButtonPress);
     };
