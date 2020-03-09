@@ -97,7 +97,6 @@
     var messageWindow = document.querySelector('.error');
 
     var closeMessage = function () {
-      // closeUploadForm();
       messageWindow.remove();
       document.removeEventListener('keydown', onEscButtonPress);
     };

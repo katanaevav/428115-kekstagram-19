@@ -19,6 +19,7 @@
   };
 
   fileSelect.addEventListener('change', function () {
+    bigPreview.src = DEFAULT_PHOTO;
     var file = fileSelect.files[0];
 
     var fileName = file.name.toLowerCase();
@@ -35,7 +36,6 @@
       });
       reader.readAsDataURL(file);
     } else {
-      bigPreview.src = DEFAULT_PHOTO;
       loadPreviewImages();
     }
   });
