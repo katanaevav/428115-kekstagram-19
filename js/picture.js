@@ -26,6 +26,8 @@
       filteredPhotos.push(photosList[i]);
     }
     usersPictureList.appendChild(fragment);
+
+    window.filter.showFilterButtons();
   };
 
   var removeUsersPhotos = function () {

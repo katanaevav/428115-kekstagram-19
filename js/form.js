@@ -3,9 +3,9 @@
 (function () {
   var pageBody = document.querySelector('body');
   var uploadPhotoForm = document.querySelector('.img-upload');
-  var uploadFileInput = uploadPhotoForm.querySelector('#upload-file');
+  var uploadFileInput = uploadPhotoForm.querySelector('.img-upload__input');
   var imgUploadOverlay = uploadPhotoForm.querySelector('.img-upload__overlay');
-  var closeUploadFormButton = uploadPhotoForm.querySelector('#upload-cancel');
+  var closeUploadFormButton = uploadPhotoForm.querySelector('.img-upload__cancel');
   var hashtagsInput = uploadPhotoForm.querySelector('.text__hashtags');
   var commentInput = uploadPhotoForm.querySelector('.text__description');
 

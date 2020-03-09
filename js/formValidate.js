@@ -20,6 +20,8 @@
 
     var hashtags = target.value.split(' ');
 
+    console.log(hashtags);
+
     var noHash = false;
     var invalidSymbols = false;
     var minLength = false;

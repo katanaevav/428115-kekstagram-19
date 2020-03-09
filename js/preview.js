@@ -14,7 +14,7 @@
   var usersPictureList = document.querySelector('.pictures');
 
   var bigPicture = document.querySelector('.big-picture');
-  var closeBigPictureButton = document.querySelector('#picture-cancel');
+  var closeBigPictureButton = document.querySelector('.big-picture__cancel');
   var loadCommentsButton = bigPicture.querySelector('.comments-loader');
   var commentsList = bigPicture.querySelector('.social__comments');
 

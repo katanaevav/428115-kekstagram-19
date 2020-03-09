@@ -7,9 +7,13 @@
   var DISSCUSSED_PHOTOS = 'filter-discussed';
 
   var filterPanel = document.querySelector('.img-filters');
-  if (filterPanel.classList.contains('img-filters--inactive')) {
-    filterPanel.classList.remove('img-filters--inactive');
-  }
+
+  var showFilterButtons = function () {
+    if (filterPanel.classList.contains('img-filters--inactive')) {
+      filterPanel.classList.remove('img-filters--inactive');
+    }
+  };
+
   var filterForm = filterPanel.querySelector('.img-filters__form');
 
   var getRandomPhotos = function (photos) {
@@ -63,4 +67,7 @@
 
   filterForm.addEventListener('click', filterFormButtonClick);
 
+  window.filter = {
+    showFilterButtons: showFilterButtons
+  };
 })();
