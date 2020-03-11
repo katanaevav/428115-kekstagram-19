@@ -24,6 +24,7 @@
   var closeUploadForm = function () {
     hashtagsInput.value = '';
     commentInput.value = '';
+    hashtagsInput.oninput();
     imgUploadOverlay.classList.add('hidden');
     if (pageBody.classList.contains('modal-open')) {
       pageBody.classList.remove('modal-open');

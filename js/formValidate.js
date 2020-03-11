@@ -10,15 +10,13 @@
   var hashtagsInput = uploadPhotoForm.querySelector('.text__hashtags');
   var commentInput = uploadPhotoForm.querySelector('.text__description');
 
-  var validateHashtags = function (evt) {
-    var target = evt.target;
-
-    if (target.value === '') {
-      target.setCustomValidity('');
+  var validateHashtags = function (textInput) {
+    if (textInput.value === '') {
+      textInput.setCustomValidity('');
       return;
     }
 
-    var hashtags = target.value.split(' ');
+    var hashtags = textInput.value.split(' ');
 
     var noHash = false;
     var invalidSymbols = false;
@@ -76,7 +74,7 @@
       customValidityString += 'В хэштеге используются недопустимые символы;   ';
     }
 
-    target.setCustomValidity(customValidityString);
+    textInput.setCustomValidity(customValidityString);
   };
 
   var onCommentCheck = function (evt) {
@@ -88,6 +86,9 @@
     }
   };
 
-  hashtagsInput.addEventListener('input', validateHashtags);
+  hashtagsInput.oninput = function() {
+    validateHashtags(this);
+  };
+
   commentInput.addEventListener('input', onCommentCheck);
 })();
