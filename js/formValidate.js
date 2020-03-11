@@ -86,7 +86,7 @@
     }
   };
 
-  hashtagsInput.oninput = function() {
+  hashtagsInput.oninput = function () {
     validateHashtags(this);
   };
 
