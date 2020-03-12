@@ -17,7 +17,7 @@
     scaleValueInput.value = scaleValue + '%';
   };
 
-  var increaseImageSize = function () {
+  var onIncreaseImageSize = function () {
     scaleValueInput.value = parseInt(scaleValueInput.value, 10) + SCALE_INC;
     if (scaleValueInput.value > SCALE_MAX) {
       scaleValueInput.value = SCALE_MAX;
@@ -25,9 +25,9 @@
     setScaleValue(scaleValueInput.value);
   };
 
-  scalePlusButton.addEventListener('click', increaseImageSize);
+  scalePlusButton.addEventListener('click', onIncreaseImageSize);
 
-  var decreaseImageSize = function () {
+  var onDecreaseImageSize = function () {
     scaleValueInput.value = parseInt(scaleValueInput.value, 10) - SCALE_INC;
     if (scaleValueInput.value < SCALE_MIN) {
       scaleValueInput.value = SCALE_MIN;
@@ -35,7 +35,7 @@
     setScaleValue(scaleValueInput.value);
   };
 
-  scaleMinusButton.addEventListener('click', decreaseImageSize);
+  scaleMinusButton.addEventListener('click', onDecreaseImageSize);
 
   var setDefaultScaleValue = function () {
     setScaleValue(SCALE_DEFAULT);

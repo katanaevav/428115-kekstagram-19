@@ -18,7 +18,7 @@
   var loadCommentsButton = bigPicture.querySelector('.comments-loader');
   var commentsList = bigPicture.querySelector('.social__comments');
 
-  var closeBigPicture = function () {
+  var onCloseBigPicture = function () {
     bigPicture.classList.add('hidden');
     if (pageBody.classList.contains('modal-open')) {
       pageBody.classList.remove('modal-open');
@@ -29,11 +29,11 @@
   loadCommentsButton.addEventListener('click', function () {
     renderMoreComments(window.picture.filteredPhotos[currentPhotoId]);
   });
-  closeBigPictureButton.addEventListener('click', closeBigPicture);
+  closeBigPictureButton.addEventListener('click', onCloseBigPicture);
 
   var onCloseBigPictureEscPress = function (evt) {
     if (evt.key === ESC_KEY) {
-      closeBigPicture();
+      onCloseBigPicture();
     }
   };
 

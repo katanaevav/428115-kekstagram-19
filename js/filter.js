@@ -59,13 +59,13 @@
     window.picture.renderFilteredPhotos(window.picture.filteredPhotos);
   });
 
-  var filterFormButtonClick = function (evt) {
+  var onFilterFormButtonClick = function (evt) {
     filterForm.querySelector('.img-filters__button--active').classList.remove('img-filters__button--active');
     evt.target.classList.add('img-filters__button--active');
     setFilter(evt.target);
   };
 
-  filterForm.addEventListener('click', filterFormButtonClick);
+  filterForm.addEventListener('click', onFilterFormButtonClick);
 
   window.filter = {
     showButtons: showButtons
