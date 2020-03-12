@@ -60,19 +60,27 @@
     }
   };
 
+  var displayCommentsCount = function (displayed, total) {
+    document.querySelector('.social__comment-count').innerHTML = displayed + ' из <span class="comments-count">' + total + '</span> комментариев';
+  }
+
   var renderComments = function (photoObj) {
     bigPicture.querySelectorAll('.social__comment').forEach(function (comment) {
       comment.remove();
     });
-    commentsList.insertAdjacentHTML('beforeend', generateCommentsStructure(photoObj.comments.slice(START_COMMENT, MAX_COMMENTS_LOAD)));
+    var comments = photoObj.comments.slice(START_COMMENT, MAX_COMMENTS_LOAD);
+    commentsList.insertAdjacentHTML('beforeend', generateCommentsStructure(comments));
     renderedComments = MAX_COMMENTS_LOAD;
+    displayCommentsCount(comments.length, photoObj.comments.length);
     displayLoadCommentsButton(photoObj);
   };
 
   var renderMoreComments = function (photoObj) {
     var endCommentNumber = (photoObj.comments.length - renderedComments > MAX_COMMENTS_LOAD) ? renderedComments + MAX_COMMENTS_LOAD : photoObj.comments.length;
-    commentsList.insertAdjacentHTML('beforeend', generateCommentsStructure(photoObj.comments.slice(renderedComments, endCommentNumber)));
+    var comments = photoObj.comments.slice(renderedComments, endCommentNumber);
+    commentsList.insertAdjacentHTML('beforeend', generateCommentsStructure(comments));
     renderedComments = endCommentNumber;
+    displayCommentsCount(renderedComments, photoObj.comments.length);
     displayLoadCommentsButton(photoObj);
   };
 
@@ -93,9 +101,6 @@
     document.addEventListener('keydown', onCloseBigPictureEscPress);
     currentPhotoId = photoId;
   };
-
-  var socialCommentsCount = document.querySelector('.social__comment-count');
-  socialCommentsCount.classList.add('hidden');
 
   var commentsLoader = document.querySelector('.comments-loader');
   commentsLoader.classList.add('hidden');
