@@ -20,11 +20,6 @@
 
   var renderPhotos = function (photosList) {
     var fragment = document.createDocumentFragment();
-    // for (var i = 0; i < photosList.length; i++) {
-    //   fragment.appendChild(createUserPicture(photosList[i], i));
-    //   photos.push(photosList[i]);
-    //   filteredPhotos.push(photosList[i]);
-    // }
     photosList.forEach(function (item, index) {
       fragment.appendChild(createUserPicture(item, index));
       photos.push(item);
@@ -45,9 +40,6 @@
   var renderFilteredPhotos = function (photosList) {
     removeUsersPhotos();
     var fragment = document.createDocumentFragment();
-    // for (var i = 0; i < photosList.length; i++) {
-    //   fragment.appendChild(createUserPicture(photosList[i], i));
-    // }
     photosList.forEach(function (item, index) {
       fragment.appendChild(createUserPicture(item, index));
     });

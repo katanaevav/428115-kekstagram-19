@@ -30,30 +30,33 @@
     if (hashtags.length > HASHTAG_MAX_COUNT) {
       maxCount = true;
     }
-    for (var i = 0; i < hashtags.length; i++) {
-      if (hashtags[i][0] !== '#') {
+
+    hashtags.forEach(function (item) {
+      if (item[0] !== '#') {
         noHash = true;
       }
 
-      if (hashtags[i].length < HASHTAG_MIN_LENGTH) {
+      if (item.length < HASHTAG_MIN_LENGTH) {
         minLength = true;
       }
 
-      if (hashtags[i].length > HASHTAG_MAX_LENGTH) {
+      if (item.length > HASHTAG_MAX_LENGTH) {
         maxLength = true;
       }
 
       var regExpr = /(^)([#a-zA-Zа-яА-Я\d]*$)/ig;
-      if (!regExpr.test(hashtags[i])) {
+      if (!regExpr.test(item)) {
         invalidSymbols = true;
       }
 
-      for (var j = i + 1; j < hashtags.length; j++) {
-        if (hashtags[i].toLowerCase() === hashtags[j].toLowerCase()) {
-          noRepeat = true;
-        }
+      var repeatingHashtags = hashtags.filter(function (hashtag) {
+        return hashtag.toLowerCase() === item.toLowerCase();
+      });
+
+      if (repeatingHashtags.length > 1) {
+        noRepeat = true;
       }
-    }
+    });
 
     if (maxCount) {
       customValidityString += 'Нельзя указывать более ' + HASHTAG_MAX_COUNT + ' хэштегов;   ';

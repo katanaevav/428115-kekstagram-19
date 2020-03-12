@@ -39,16 +39,6 @@
 
   var generateCommentsStructure = function (commentsArray) {
     var htmlStructure = '';
-    // for (var i = 0; i < commentsArray.length; i++) {
-    //   htmlStructure += '<li class="social__comment">' +
-    //     '<img ' +
-    //     'class="social__picture" ' +
-    //     'src="' + commentsArray[i].avatar + '" ' +
-    //     'alt="' + commentsArray[i].name + '" ' +
-    //     'width="35" height="35"> ' +
-    //     '<p class="social__text">' + commentsArray[i].message + '</p> ' +
-    //     '</li>';
-    // }
     commentsArray.forEach(function (item) {
       htmlStructure += '<li class="social__comment">' +
         '<img ' +
@@ -72,7 +62,7 @@
 
   var displayCommentsCount = function (displayed, total) {
     document.querySelector('.social__comment-count').innerHTML = displayed + ' из <span class="comments-count">' + total + '</span> комментариев';
-  }
+  };
 
   var renderComments = function (photoObj) {
     bigPicture.querySelectorAll('.social__comment').forEach(function (comment) {

@@ -169,12 +169,6 @@
   };
 
   var setEventsOnEffectRadio = function () {
-    // for (var er = 0; er < effectRadio.length; er++) {
-    //   if (effectRadio[er].checked) {
-    //     currentEffect = effectRadio[er].id;
-    //   }
-    //   onEffectRadioChange(effectRadio[er]);
-    // }
     effectRadio.forEach(function (item) {
       if (item.checked) {
         currentEffect = item.id;

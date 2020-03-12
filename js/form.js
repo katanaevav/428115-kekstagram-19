@@ -86,7 +86,7 @@
   };
 
   var onErrorSave = function () {
-    closeUploadForm();
+    onCloseUploadForm();
     var messageTemplate = document.querySelector('#error')
       .content
       .querySelector('.error');
@@ -96,6 +96,11 @@
     var mainBlock = document.querySelector('main');
     mainBlock.appendChild(fragment);
     var messageWindow = document.querySelector('.error');
+
+    var onCloseMessage = function () {
+      messageWindow.remove();
+      document.removeEventListener('keydown', onEscButtonPress);
+    };
 
     var onCloseButtonClick = function () {
       onCloseMessage();
