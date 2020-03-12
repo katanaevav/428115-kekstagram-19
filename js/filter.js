@@ -8,7 +8,7 @@
 
   var filterPanel = document.querySelector('.img-filters');
 
-  var showFilterButtons = function () {
+  var showButtons = function () {
     if (filterPanel.classList.contains('img-filters--inactive')) {
       filterPanel.classList.remove('img-filters--inactive');
     }
@@ -68,6 +68,6 @@
   filterForm.addEventListener('click', filterFormButtonClick);
 
   window.filter = {
-    showFilterButtons: showFilterButtons
+    showButtons: showButtons
   };
 })();

@@ -27,7 +27,7 @@
     }
     usersPictureList.appendChild(fragment);
 
-    window.filter.showFilterButtons();
+    window.filter.showButtons();
   };
 
   var removeUsersPhotos = function () {
