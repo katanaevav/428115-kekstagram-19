@@ -39,16 +39,26 @@
 
   var generateCommentsStructure = function (commentsArray) {
     var htmlStructure = '';
-    for (var i = 0; i < commentsArray.length; i++) {
+    // for (var i = 0; i < commentsArray.length; i++) {
+    //   htmlStructure += '<li class="social__comment">' +
+    //     '<img ' +
+    //     'class="social__picture" ' +
+    //     'src="' + commentsArray[i].avatar + '" ' +
+    //     'alt="' + commentsArray[i].name + '" ' +
+    //     'width="35" height="35"> ' +
+    //     '<p class="social__text">' + commentsArray[i].message + '</p> ' +
+    //     '</li>';
+    // }
+    commentsArray.forEach(function (item) {
       htmlStructure += '<li class="social__comment">' +
         '<img ' +
         'class="social__picture" ' +
-        'src="' + commentsArray[i].avatar + '" ' +
-        'alt="' + commentsArray[i].name + '" ' +
+        'src="' + item.avatar + '" ' +
+        'alt="' + item.name + '" ' +
         'width="35" height="35"> ' +
-        '<p class="social__text">' + commentsArray[i].message + '</p> ' +
+        '<p class="social__text">' + item.message + '</p> ' +
         '</li>';
-    }
+    });
     return htmlStructure;
   };
 
